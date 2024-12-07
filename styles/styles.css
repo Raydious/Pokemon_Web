@@ -1,0 +1,246 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    flex-wrap: wrap;
+    /* Allow wrapping for smaller screens */
+}
+
+header>div {
+    flex: 1;
+    /* Each section takes equal space */
+}
+
+header>div:first-child {
+    text-align: left;
+    /* Align the first column to the left */
+}
+
+header>div:nth-child(2) {
+    text-align: center;
+    /* Align the second column to the center */
+    flex: 2;
+    /* Center div takes double the space */
+}
+
+header>div:last-child {
+    text-align: right;
+    /* Align the third column to the right */
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+    display: inline-block;
+    transform: scale(1);
+    transition: transform 0.5s ease
+}
+
+header h1:hover {
+    transform: scale(1.1);
+}
+
+header h1 a {
+    color: white;
+    text-decoration: none;
+    transform: scale(1);
+    transition: transform 0.3s ease
+}
+
+header h1 a:hover {
+    color: #f7d02c;
+    /* Highlight color for links */
+    transform: scale(1.1);
+}
+
+nav {
+    display: inline-flex;
+    /* Keeps nav items inline */
+    gap: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s;
+    transform: scale(1);
+    transition: transform 0.5s ease
+}
+
+nav a:hover {
+    color: #f7d02c;
+    /* Highlight color for links */
+    transform: scale(1.1);
+}
+
+#searchBar {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px;
+    transition: width 0.3s ease;
+    /* Smooth transition for width */
+}
+
+#searchBar:focus {
+    width: 100%;
+    /* Expand the search bar when focused */
+    outline: none;
+    /* Remove the default focus outline */
+    border-color: #f7d02c;
+    /* Add a highlight color */
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        /* Stack header elements vertically */
+        text-align: center;
+    }
+
+    header>div {
+        flex: 1;
+        /* Reset flex to equal size on mobile */
+        margin-bottom: 10px;
+        /* Add spacing between stacked elements */
+    }
+
+    header>div:nth-child(2) {
+        flex: 1;
+        /* Center div no longer takes double space */
+    }
+
+    #searchBar {
+        width: 90%;
+        /* Make the search bar full width on mobile */
+        margin: 0 auto;
+        /* Center the search bar */
+    }
+
+    nav {
+        justify-content: center;
+        /* Center navigation links */
+        gap: 10px;
+        /* Reduce space between links for smaller screens */
+    }
+}
+
+.pokemon-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px;
+    width: 200px;
+    text-align: center;
+    opacity: 0;
+    /* Start invisible */
+    box-shadow: none;
+    transform: scale(0);
+    /* Start with a smaller size */
+    transition: transform 0.5s ease, opacity 0.3s ease, box-shadow 0.6s ease;
+    /* Smooth scaling, fade-in and box-shadow */
+}
+
+.pokemon-card.visible {
+    opacity: 1;
+    /* Make visible */
+    transform: scale(1);
+    /* Scale to full size */
+}
+
+.pokemon-card.hidden {
+    display: none;
+    /* Hide cards when filtered */
+}
+
+.pokemon-card:hover {
+    transform: scale(1.1);
+    /* Scale up on hover */
+    transition: transform 0.3s ease, box-shadow 0.6s ease;
+    /* Smooth scaling for hover */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    /* Larger box shadow on hover */
+}
+
+.pokemon-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px;
+}
+
+.pokemon-img {
+    width: 100px;
+    height: 100px;
+}
+
+
+
+
+
+.carousel {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .carousel-inner {
+    display: flex;
+    transition: transform 0.5s ease;
+  }
+  
+  .carousel-item {
+    min-width: 100%;
+    flex-shrink: 0;
+  }
+  
+  .carousel-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 10;
+  }
+  
+  .carousel-control.prev {
+    left: 10px;
+  }
+  
+  .carousel-control.next {
+    right: 10px;
+  }
+  
+  .carousel-control:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  
