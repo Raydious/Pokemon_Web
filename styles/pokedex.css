@@ -1,0 +1,373 @@
+header>div:nth-child(2) {
+    text-align: center;
+    flex: 2;
+}
+
+header>div:nth-child(3) {
+    text-align: ri;
+    flex: 1;
+}
+
+/* POKEDEX */
+
+.container {
+    display: flex;
+}
+
+/* User Info Section */
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: linear-gradient(to bottom, #444, #222);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: white;
+    text-align: center;
+}
+
+.user-info .user-avatar {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #f7f7f7;
+    margin-bottom: 10px;
+}
+
+.user-info .user-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.user-info .user-stats {
+    font-size: 14px;
+    margin: 0;
+    color: #ccc;
+}
+
+.battle-panel {
+    width: 250px;
+    padding: 15px;
+    background-color: #f7f7f7;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid #ccc;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    background: linear-gradient(to bottom, rgb(50, 50, 50), rgb(50, 50, 50), rgb(134, 35, 35));
+}
+
+.battle-panel h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.battle-panel ul {
+    display: grid;
+    grid-template-areas:
+        "slot1 slot1"
+        "slot2 slot3"
+        "slot4 slot5";
+    grid-template-columns: 1fr 1fr; /* Two columns for the second and third rows */
+    gap: 10px; /* Add spacing between slots */
+    padding: 0;
+    margin: 0;
+}
+
+.battle-panel li {
+    position: relative; /* Set the slot as a positioned container for the button */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f7f7f7;
+    height: 100px; /* Set the height to match the width for square slots */
+    width: 100%; /* Full width inside the grid */
+}
+
+.battle-panel li button {
+    position: absolute; /* Position the button inside the slot */
+    top: -10px; /* Offset from the top */
+    right: -10px; /* Offset from the right */
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    opacity: 0; /* Make it invisible */
+    z-index: 10; /* Ensure it appears above other content */
+    transform: scale(0);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.battle-panel li:hover button {
+    transform: scale(1);
+    opacity: 1; /* Make it visible */
+    visibility: visible; /* Enable interaction */
+}
+
+.battle-panel li button:hover {
+    background-color: #c0392b; /* Darker color on hover */
+}
+
+.battle-panel li:nth-child(1) {
+    grid-area: slot1; /* First slot takes the first row */
+}
+
+.battle-panel li:nth-child(2) {
+    grid-area: slot2; /* Second slot in the second row */
+}
+
+.battle-panel li:nth-child(3) {
+    grid-area: slot3; /* Third slot in the second row */
+}
+
+.battle-panel li:nth-child(4) {
+    grid-area: slot4; /* Fourth slot in the third row */
+}
+
+.battle-panel li:nth-child(5) {
+    grid-area: slot5; /* Fifth slot in the third row */
+}
+
+.battle-panel li img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 5px; /* Space between image and name */
+}
+
+.battle-panel li span {
+    font-size: 14px; /* Adjust font size */
+    text-align: center; /* Center align text */
+    color: #333;
+    font-weight: bold;
+}
+
+.empty-slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 14px;
+    height: 90px; /* Match the height of a filled slot */
+    background-color: #f7f7f7;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+}
+
+
+.battle-panel li button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px; /* Adjust button size */
+}
+
+.battle-panel li button:hover {
+    background-color: #c0392b;
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+
+/* Popup */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.popup.show {
+    display: flex;
+    opacity: 1;
+}
+
+.popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    width: 350px;
+    max-width: 90%;
+    text-align: center;
+    animation: scaleIn 0.5s ease-in-out;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+.popup-header {
+    background: linear-gradient(135deg, #6a1b9a, #9c27b0);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    padding: 10px;
+    margin: -20px -20px 20px -20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.popup-header h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    color: #ff4081;
+}
+
+.preview-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.preview-avatar {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.preview-avatar:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.popup-content label {
+    display: block;
+    margin: 15px 0 5px;
+    text-align: left;
+    font-size: 14px;
+    color: #333;
+}
+
+.popup-content input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.popup-content input:focus {
+    border-color: #9c27b0;
+    outline: none;
+}
+
+.save-button {
+    background: linear-gradient(135deg, #6a1b9a, #9c27b0);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+.save-button:hover {
+    background: linear-gradient(135deg, #9c27b0, #6a1b9a);
+}
+
+
+
+
+
+.pokemon-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px;
+    width: 200px;
+    text-align: center;
+    opacity: 0;
+    /* Start invisible */
+    box-shadow: none;
+    transform: scale(0);
+    /* Start with a smaller size */
+    transition: transform 0.5s ease, opacity 0.3s ease, box-shadow 0.6s ease;
+    /* Smooth scaling, fade-in and box-shadow */
+}
+
+.pokemon-card.visible {
+    opacity: 1;
+    /* Make visible */
+    transform: scale(1);
+    /* Scale to full size */
+}
+
+.pokemon-card.hidden {
+    display: none;
+    /* Hide cards when filtered */
+}
+
+.pokemon-card:hover {
+    transform: scale(1.1);
+    /* Scale up on hover */
+    transition: transform 0.3s ease, box-shadow 0.6s ease;
+    /* Smooth scaling for hover */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    /* Larger box shadow on hover */
+    z-index: 99;
+}
+
+.pokemon-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px;
+}
+
+.pokemon-img {
+    width: 100px;
+    height: 100px;
+}

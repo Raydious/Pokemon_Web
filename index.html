@@ -1,49 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pokédex</title>
-  <link rel="stylesheet" href="styles/styles.css">
-</head>
-<body>
-  <header>
-    <div>
-      <h1><a href="index.html">Pokédex<span style="font-size: 15px;">.pt</span></a></h1>
-    </div>
-    <div>
-      <input
-        type="text"
-        id="searchBar"
-        placeholder="Search Pokémon by name..."
-        oninput="filterPokemon()"
-      />
-    </div>
-    <div>
-      <nav>
-        <a href="pages/pokedex.html">Pokedex</a>
-        <a href="pages/my-pokemon.html">My Pokemon</a>
-        <a href="pages/battle.html">Battles</a>
-      </nav>
-    </div>
-  </header>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokédex</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  </head>
+  <body>
 
-  <div class="carousel">
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img src="https://via.placeholder.com/800x300?text=Pokemon+1" alt="Pokemon 1">
-      </div>
-      <div class="carousel-item">
-        <img src="https://via.placeholder.com/800x300?text=Pokemon+2" alt="Pokemon 2">
-      </div>
-      <div class="carousel-item">
-        <img src="https://via.placeholder.com/800x300?text=Pokemon+3" alt="Pokemon 3">
-      </div>
+    <!-- Side Nav -->
+    <div id="mySidebar" class="sidebar">
+      <a href="index.html">Home</a>
+      <a href="pages/pokedex.html">Pokedex</a>
+      <a href="pages/my-pokemon.html">My Pokemon</a>
+      <a href="pages/battle.html">Battles</a>
     </div>
-    <button class="carousel-control prev" onclick="prevSlide()">&#10094;</button>
-    <button class="carousel-control next" onclick="nextSlide()">&#10095;</button>
-  </div>
 
-  <script src="scripts/home.js"></script>
-</body>
+    <!-- Nav -->
+    <header>
+      <button class="openbtn" onclick="openCloseNav()"><i class="fa-solid fa-bars"></i></button>
+      <div>
+        <h1><a href="index.html">Pokédex<span
+              style="font-size: 15px;">.pt</span></a></h1>
+      </div>
+      <div>
+        <nav>
+          <a href="pages/pokedex.html">Pokedex</a>
+          <a href="pages/my-pokemon.html">My Pokemon</a>
+          <a href="pages/battle.html">Battles</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+
+      <!-- Carousel -->
+      <div class="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item">
+            <div class="carousel-overlay">
+              <h2 class="carousel-title">Pokédex</h2>
+              <p class="carousel-description">
+                Discover all Pokémon from every region with detailed stats, evolutions, and types. 
+                The Pokédex is your ultimate guide to understanding the vast and diverse Pokémon universe. 
+                Whether you're a beginner or a seasoned trainer, explore and learn more about your favorite Pokémon.
+              </p>
+            </div>
+            <img src="img/pokedex-carousel.jpg" alt="Slide 1">
+          </div>
+          <div class="carousel-item">
+            <div class="carousel-overlay">
+              <h2 class="carousel-title">Battle Mode</h2>
+              <p class="carousel-description">
+                Engage in strategic battles that test your skills as a trainer. 
+                Plan your moves, counter your opponent’s strategies, and lead your Pokémon to victory. 
+                Master the art of battling and prove you are the ultimate Pokémon trainer in competitive gameplay.
+              </p>
+            </div>
+            <img src="img/pokemon-battle-carousel.jpg" alt="Slide 2">
+          </div>
+          <div class="carousel-item">
+            <div class="carousel-overlay">
+              <h2 class="carousel-title">Pokéballs</h2>
+              <p class="carousel-description">
+                Equip yourself with the best Pokéballs to catch Pokémon in any situation. 
+                From basic Pokéballs to specialized types like Ultra Balls and Master Balls, 
+                ensure your team is always ready for new encounters. 
+                Learn the secrets of catching rare and legendary Pokémon.
+              </p>
+            </div>
+            <img src="img/pokeballs-carousel.jpg" alt="Slide 3">
+          </div>
+        </div>
+      </div>
+      <div class="carousel-dots"></div>
+
+      <!-- Separator -->
+      <hr class="separator">
+
+      <!-- Feature Pokemon -->
+      <section class="section-card" title="Feature Pokemon">
+        <div class="card BeforeFirstActive">
+          <div class="card-img">
+            <img src="img/pokebola.png" alt="Image of Pokemon" height="120">
+          </div>
+          <div class="card-info">
+            <h3 class="card-title">Loading... <span class="card-subtitle">#0000</span></h3>
+            <div class="card-type">
+              <h3 class="title">Type:</h3>
+              <div class="type">Loading...</div>
+            </div>
+            <div class="card-description">Fetching description...</div>
+          </div>
+        </div>
+        <div class="section-info">
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui sequi assumenda neque eum voluptate quidem voluptates, sunt laudantium. Repellendus mollitia, illum nobis consequuntur hic sit optio culpa adipisci est reprehenderit.</p>
+          <button id="nextPokemonButton"><i class="fa-solid fa-rotate"></i> Random Pokémon</button>
+        </div>
+      </section>
+
+      <!-- Separator -->
+      <hr class="separator">
+
+      <!-- Article Pokemon Battles -->
+      <article class="article-container">
+        <div class="article-info">
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui sequi assumenda neque eum voluptate quidem voluptates, sunt laudantium. Repellendus mollitia, illum nobis consequuntur hic sit optio culpa adipisci est reprehenderit.</p>
+          <button id="button-battles">Pokemon Battles</button>
+        </div>
+        <aside class="article-img">
+          <img src="img/pokemon-battle-carousel.jpg" alt="Pokemon Battles">
+        </aside>
+      </article>
+    </main>
+    <footer>
+      <!-- TODO -->
+    </footer>
+    <script src="scripts/home.js"></script>
+  </body>
 </html>

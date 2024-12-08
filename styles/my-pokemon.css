@@ -1,0 +1,9 @@
+header>div:nth-child(2) {
+    text-align: center;
+    flex: 2;
+}
+
+header>div:nth-child(3) {
+    text-align: right;
+    flex: 1;
+}
