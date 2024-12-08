@@ -78,34 +78,69 @@
       <div class="carousel-dots"></div>
 
       <!-- Separator -->
-      <hr class="separator">
+      <!--hr class="separator"-->
 
       <!-- Feature Pokemon -->
       <section class="section-card" title="Feature Pokemon">
-        <div class="card BeforeFirstActive">
-          <div class="card-img">
-            <img src="img/pokebola.png" alt="Image of Pokemon" height="120">
-          </div>
-          <div class="card-info">
-            <h3 class="card-title">Loading... <span class="card-subtitle">#0000</span></h3>
-            <div class="card-type">
-              <h3 class="title">Type:</h3>
-              <div class="type">Loading...</div>
+        <div style="width: 600px;">
+          <div class="card BeforeFirstActive">
+            <div class="card-img">
+              <img src="img/pokeball.png" alt="Image of Pokemon" height="120">
             </div>
-            <div class="card-description">Fetching description...</div>
+            <div class="card-info">
+              <h3 class="card-title">Loading... <span class="card-subtitle">#0000</span></h3>
+              <div class="card-type">
+                <h3 class="title">Type:</h3>
+                <div class="type">Loading...</div>
+              </div>
+              <div class="card-description">Fetching description...</div>
+            </div>
           </div>
         </div>
         <div class="section-info">
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui sequi assumenda neque eum voluptate quidem voluptates, sunt laudantium. Repellendus mollitia, illum nobis consequuntur hic sit optio culpa adipisci est reprehenderit.</p>
-          <button id="nextPokemonButton"><i class="fa-solid fa-rotate"></i> Random Pokémon</button>
+          <h2 class="info-title">Get Ready for a Pokémon Surprise!</h2>
+          <p class="info-description">
+              Click the button below to reveal a random Pokémon and an exciting fact about it in the card on the right! 
+              Who knows what amazing Pokémon you might discover next?
+          </p>
+          <div class="info-icon">
+              <img id="pokeball" src="img/pokeball.png" alt="Pokéball Icon" />
+          </div>
+          <button id="nextPokemonButton"><i class="fa-solid fa-dice"></i> Show Me a Pokémon!</button>
         </div>
       </section>
 
       <!-- Separator -->
-      <hr class="separator">
+      <!--hr class="separator"-->
 
+      <!-- Call to Battle Section -->
+      <!-- Battle Section -->
+      <section class="battle-section" title="Call to Battle">
+        <div class="battle-info" style="order: 1;">
+            <!-- Info on the left -->
+            <h2 class="info-title">Prepare for Battle!</h2>
+            <p class="info-description">
+                Test your Pokémon's strength and improve their skills by engaging in thrilling battles. 
+                Show off your strategy, dominate the battlefield, and train your Pokémon to be the very best!
+            </p>
+            <div class="info-icon">
+                <img id="battle" src="img/battle.png" alt="Battle Icon" />
+            </div>
+            <button id="battleButton"><i class="fa-solid fa-bolt"></i> Call to Battle</button>
+        </div>
+        <div style="width: 600px; order: 2;">
+            <!-- Card with battle image -->
+            <div class="card battle-card">
+                <img src="img/pokemon-battle-carousel.jpg" alt="Epic Pokémon Battle" class="battle-card-image" />
+                <div class="battle-card-overlay">
+                    <h3 class="battle-card-title">Battle Time!</h3>
+                    <p class="battle-card-text">Experience the thrill of battles and unleash your Pokémon's true potential.</p>
+                </div>
+            </div>
+        </div>
+      </section>
       <!-- Article Pokemon Battles -->
-      <article class="article-container">
+      <!--section class="article-container">
         <div class="article-info">
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui sequi assumenda neque eum voluptate quidem voluptates, sunt laudantium. Repellendus mollitia, illum nobis consequuntur hic sit optio culpa adipisci est reprehenderit.</p>
           <button id="button-battles">Pokemon Battles</button>
@@ -113,10 +148,38 @@
         <aside class="article-img">
           <img src="img/pokemon-battle-carousel.jpg" alt="Pokemon Battles">
         </aside>
-      </article>
-    </main>
-    <footer>
-      <!-- TODO -->
+      </section>
+    </main-->
+    <footer class="site-footer">
+      <div class="pokeball-container">
+        <img src="img/pokeball.png" alt="Pokéball" class="pokeball-footer">
+      </div>
+      <div class="footer-container">
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="pokedex.html">Pokédex</a></li>
+            <li><a href="my-pokemon.html">My Pokémon</a></li>
+            <li><a href="battle.html">Battles</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Follow Us</h3>
+          <div class="social-icons">
+            <a href="#"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#"><i class="fa-brands fa-twitter"></i></a>
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+        <div class="footer-section">
+          <h3>Gotta Catch 'Em All!</h3>
+          <p>Keep exploring and training to be the best Pokémon Master! Remember, the journey is just as exciting as the destination.</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 Pokédex.pt | All rights reserved.</p>
+      </div>
     </footer>
     <script src="scripts/home.js"></script>
   </body>

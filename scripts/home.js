@@ -252,8 +252,25 @@ function showNextPokemon(first) {
 })();
 
 // Add an event listener to the Random Pokemon button
-document.getElementById('nextPokemonButton').addEventListener('click', function() {
-    showNextPokemon(false);
+document.getElementById('nextPokemonButton').addEventListener('click', function (event) {
+  const button = event.currentTarget;
+
+  // Add a scale-down effect
+  button.style.transform = 'scale(0.9)';
+  button.style.transition = 'transform 0.2s ease-out';
+
+  // After the scale-down effect, scale it back up
+  setTimeout(() => {
+      button.style.transform = 'scale(1)';
+
+      // Reset the inline style after the animation to allow hover effects
+      setTimeout(() => {
+          button.style.transform = ''; // Remove inline style
+      }, 200); // Matches the second scale duration
+  }, 200); // Matches the scale-down duration
+
+  // Trigger the Pokémon display function
+  showNextPokemon(false);
 });
 
 /**  NAVIGATION  **/
@@ -272,3 +289,40 @@ function openCloseNav() {
     // Update the state of isOpenNav
     isOpenNav = !isOpenNav;
 }
+
+
+
+function startCoolAnimation(elementId) {
+  const element = document.getElementById(elementId);
+  let scale = 1; // Default scale
+  let angle = 0; // Current rotation angle
+  let bounce = 0; // Current bounce height
+  let swingDirection = 1; // Direction of the swing (1 = right, -1 = left)
+  let bounceDirection = 1; // Direction of the bounce (1 = up, -1 = down)
+
+  setInterval(() => {
+      // Update the swing angle
+      angle += swingDirection * 2; // Rotate 2 degrees per frame
+      if (angle >= 15 || angle <= -15) swingDirection *= -1; // Reverse swing at 15 degrees
+
+      // Update the bounce height
+      bounce += bounceDirection * 2; // Bounce 2px per frame
+      if (bounce >= 10 || bounce <= 0) bounceDirection *= -1; // Reverse bounce at bounds
+
+      // Apply the transform with scaling
+      element.style.transform = `translateY(-${bounce}px) rotate(${angle}deg) scale(${scale})`;
+  }, 50); // Adjust the interval for smoothness
+
+  // Handle hover state
+  element.addEventListener("mouseover", () => {
+      scale = 1.5; // Scale up when hovered
+  });
+
+  element.addEventListener("mouseout", () => {
+      scale = 1; // Reset scale when hover ends
+  });
+}
+
+// Start the animation for both elements
+startCoolAnimation("pokeball");
+startCoolAnimation("battle");
