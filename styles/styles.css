@@ -349,6 +349,7 @@ nav a:hover {
     background-color: #b9b9b9;
     padding-top: 30px;
     padding-bottom: 30px;
+    flex-wrap: wrap;
 
     .card {
         position: relative;
@@ -359,7 +360,7 @@ nav a:hover {
         gap: 50px;
         padding: 15px;
         max-width: 600px;
-        height: 350px;
+        min-height: 350px;
         background-image: url("https://assets.pokemon.com/static2/_ui/img/chrome/body_gray_bg.png");
         color: white;
         border-radius: 8px;
@@ -394,7 +395,6 @@ nav a:hover {
                 gap: 10px;
                 
                 .type {
-                    width: 140px;
                     height: 32px;
                     padding: 10px;
                     background-color: #E2BF65;
@@ -426,10 +426,8 @@ nav a:hover {
             border: 5px solid #fff;
             border-radius: 50%;
             margin: 0 auto;
-            max-width: 150px;
-            max-height: 150px;
-            width: 100%;
-            height: 100%;
+            width: 120px;
+            min-height: 120px;
             overflow: hidden;
             align-items: center;
             justify-content: center;
@@ -439,7 +437,7 @@ nav a:hover {
             img {
                 width: 100%;
                 height: 100%;
-                object-fit: cover;
+                object-fit: contain;
             }
         }
 
@@ -552,6 +550,7 @@ nav a:hover {
     flex-direction: row;
     padding: 30px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    flex-wrap: wrap-reverse;
 }
 
 .battle-section .battle-info {
