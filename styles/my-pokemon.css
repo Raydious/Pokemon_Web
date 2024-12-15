@@ -28,23 +28,25 @@ header>div:nth-child(3) {
 #gameArea::before {
     content: '';
     position: absolute;
-    top: 10%;
+    top: 0; /* Start at the top */
     left: 0;
-    width: 200%;
-    height: 200px;
-    background: url('https://i.imgur.com/SmIzc3M.png') repeat-x; /* Example cloud image */
+    width: 100%; /* Match the width of the container */
+    height: 50%; /* Match the height of the container */
+    background: url('../img/clouds.png') repeat-x; /* Horizontally repeating clouds */
+    background-size: auto 100%; /* Scale the image to fit the height */
     opacity: 0.8;
-    animation: moveClouds 60s linear infinite; /* Smooth horizontal movement */
+    animation: moveClouds 60s linear infinite; /* Infinite horizontal scrolling */
     pointer-events: none;
     z-index: -1; /* Behind everything */
 }
 
+/* Infinite horizontal movement of the clouds */
 @keyframes moveClouds {
     0% {
-        transform: translateX(0);
+        background-position: 0 0; /* Start at the left */
     }
     100% {
-        transform: translateX(-100%);
+        background-position: -100% 0; /* Move to the left */
     }
 }
 

@@ -105,7 +105,7 @@ function handleDragEnd() {
 
   // Simulate a throw based on velocity
   pokeball.style.transition = "transform 1s linear";
-  const throwMultiplier = 300; // Adjust multiplier to scale the throw distance
+  const throwMultiplier = 250; // Adjust multiplier to scale the throw distance
   const finalX = velocityX * throwMultiplier;
   const finalY = velocityY * throwMultiplier;
 
