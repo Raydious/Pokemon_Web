@@ -196,23 +196,44 @@ function displayPokemon(pokemon) {
     const pokemonCard = document.createElement('div');
     pokemonCard.classList.add('pokemon-card');
     pokemonCard.setAttribute('data-name', pokemon.name.toLowerCase()); // Store the name for filtering
-    pokemonCard.style.backgroundColor = backgroundColor; // Set background color based on type
+    pokemonCard.style.background = `radial-gradient(circle at 50% 0%, ${backgroundColor} 36%, #ffffff 36%)`; // Set background color based on type
 
     const pokemonImage =
         pokemon.sprites.other['official-artwork'].front_default ||
         pokemon.sprites.front_default;
 
+    const typeHtml = pokemon.types.map((item) => {
+        return `<span style="background-color: ${typeColors[item.type.name]}"}>${item.type.name}</span>`;
+    }).join("");
+
     pokemonCard.innerHTML = `
-        <h3>${pokemon.name.toUpperCase()}</h3>
-        <img class="pokemon-img" src="${pokemonImage}" alt="${pokemon.name}" />
-        <p><strong>Type:</strong> ${pokemon.types
-            .map((type) => type.type.name)
-            .join(', ')}</p>
-        <p><strong>Attack:</strong> ${stats.attack}</p>
-        <p><strong>Defense:</strong> ${stats.defense}</p>
-        <p><strong>HP:</strong> ${stats.hp}</p>
+        <p class="hp">
+          <span>HP</span>
+            ${stats.hp}
+        </p>
+        <img class="poke-img" src=${pokemonImage} alt="${pokemon.name}" />
+        <h2 class="poke-name">${pokemon.name.toUpperCase()}</h2>
+        <div class="types">
+            ${typeHtml}
+        </div>
+        <div class="stats">
+          <div>
+            <h3>${stats.attack}</h3>
+            <p>Attack</p>
+          </div>
+          <div>
+            <h3>${stats.defense}</h3>
+            <p>Defense</p>
+          </div>
+          <div>
+            <h3>${stats.speed}</h3>
+            <p>Speed</p>
+          </div>
+        </div>
         <button onclick="addToBattleTeam('${pokemon.name}', '${pokemonImage}')">Add to Team</button>
     `;
+
+    
 
     // Add the card to the DOM
     pokemonList.appendChild(pokemonCard);
@@ -301,3 +322,62 @@ function updateAndSaveUserInfo(name) {
 
 // Initialize user info on page load
 renderUserInfo();
+
+
+
+
+/**  NAVIGATION  **/
+
+// Variable to set the nav is open or not
+let isOpenNav = false;
+
+/**
+ * Function to open or close the sidenav
+ */
+function openCloseNav() {
+
+    // If the right nav is open, close it
+    if (!isOpenNav && isRightNavOpen) {
+        this.openCloseAside();
+        return;
+    };
+
+    // Toggle the sidenav's margin left
+    document.getElementById("mySidebar").style.marginLeft = isOpenNav ? "-250px" : "0px";
+
+    // Update the state of isOpenNav
+    isOpenNav = !isOpenNav;
+}
+
+// Variable to set the aside is open or not
+let isRightNavOpen = false;
+
+/**
+ * Function to open or close the aside
+ */
+function openCloseAside() {
+
+    // If the sidenav is open, close it
+    if (isOpenNav && !isRightNavOpen) {
+        this.openCloseNav();
+        return;
+    };
+
+    // Toggle the aside's margin right
+    document.getElementById("battle-panel").style.marginRight = isRightNavOpen ? "-250px" : "0px";
+
+    // Update the state of isRightNavOpen
+    isRightNavOpen = !isRightNavOpen;
+}
+
+/**
+ * Function to close the aside when click ouside
+ */
+function closeAside() {
+
+    // If is not open, don't do anything
+    if (!isRightNavOpen) return;
+
+    // Close aside
+    this.openCloseAside();
+}

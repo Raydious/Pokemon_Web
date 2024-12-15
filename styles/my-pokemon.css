@@ -7,3 +7,218 @@ header>div:nth-child(3) {
     text-align: right;
     flex: 1;
 }
+
+
+
+
+/* Game Area: Enhanced Visuals */
+#gameArea {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(to bottom, #87CEEB, #6BBF59, #3E8E41); /* Sky to grass gradient */
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.3); /* Add depth */
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* Add dynamic clouds in the background */
+#gameArea::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 0;
+    width: 200%;
+    height: 200px;
+    background: url('https://i.imgur.com/SmIzc3M.png') repeat-x; /* Example cloud image */
+    opacity: 0.8;
+    animation: moveClouds 60s linear infinite; /* Smooth horizontal movement */
+    pointer-events: none;
+    z-index: -1; /* Behind everything */
+}
+
+@keyframes moveClouds {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* Spawning Area: Glowing Effect */
+/*#gameArea::after {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    width: 60%;
+    height: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.5); 
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 50px rgba(0, 128, 0, 0.6); 
+    border-radius: 15px;
+    pointer-events: none;
+    z-index: 1;
+}*/
+
+/* Pokémon: Enhanced Glow and Float Effect */
+.pokemon {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background-size: 130%;
+    background-position: center;
+    background-repeat: no-repeat;
+    animation: pokemonFloat 2s infinite alternate ease-in-out, pokemonPulse 3s infinite;
+    filter: drop-shadow(0px 6px 10px rgba(0, 0, 0, 0.4));
+    border-radius: 50%; /* Rounded border for a magical effect */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6); /* Glow effect */
+}
+
+/* Pokémon Pulsating Glow */
+@keyframes pokemonPulse {
+    0% {
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+    }
+    100% {
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+    }
+}
+
+/* Pokémon Floating Animation */
+@keyframes pokemonFloat {
+    0% {
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        transform: translateY(-15px) scale(1.05); /* Subtle scaling for added effect */
+    }
+}
+
+/* PokéBall: Enhanced Hover and Bounce */
+.pokeball {
+    border-radius: 50%;
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    background-image: url("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png");
+    background-size: 150%;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    animation: pokeballBounce 1.2s infinite;
+    filter: drop-shadow(0px 6px 10px rgba(0, 0, 0, 0.5));
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* PokéBall Glow on Hover */
+.pokeball:hover {
+    transform: scale(1.2);
+    box-shadow: 0px 6px 20px rgba(255, 50, 50, 0.8); /* Red glow when hovered */
+}
+
+/* PokéBall Bouncing Animation */
+@keyframes pokeballBounce {
+    0% {
+        transform: translate(-50%, 0);
+    }
+    50% {
+        transform: translate(-50%, -15px);
+    }
+    100% {
+        transform: translate(-50%, 0);
+    }
+}
+
+/* Scoreboard: Frosted Glass Effect */
+#infoBox {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.1); /* Frosted glass effect */
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 15px;
+    font-family: "Arial", sans-serif;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+/* Text Styling */
+#infoBox h2 {
+    font-size: 20px;
+    margin: 0;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+#infoBox p {
+    font-size: 14px;
+    margin: 5px 0;
+    text-align: center;
+}
+
+/* PokéBall Dock */
+#pokeballDock {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to top, #222, rgba(0, 0, 0, 0.6)); /* Dark dock gradient */
+    box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.5); /* Shadow above the dock */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+
+/* PokéBall Dock Visual */
+#pokeballDock .dock {
+    position: relative;
+    width: 200px;
+    height: 80px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.8)); /* Circular gradient */
+    border-radius: 40px;
+    border: 2px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2), inset 0px 4px 10px rgba(0, 0, 0, 0.5); /* Glow */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Dock Glow Animation */
+#pokeballDock .dock::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 40px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(255, 0, 0, 0.5), transparent);
+    animation: dockGlow 2s infinite alternate;
+    border-radius: 50%;
+    z-index: -1;
+}
+
+@keyframes dockGlow {
+    0% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+}
+

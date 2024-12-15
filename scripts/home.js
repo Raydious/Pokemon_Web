@@ -283,8 +283,8 @@ let isOpenNav = false;
  */
 function openCloseNav() {
 
-    // Toggle the sidenav's width
-    document.getElementById("mySidebar").style.width = isOpenNav ? "0px" : "250px";
+    // Toggle the sidenav's margin left
+    document.getElementById("mySidebar").style.marginLeft = isOpenNav ? "-250px" : "0px";
 
     // Update the state of isOpenNav
     isOpenNav = !isOpenNav;

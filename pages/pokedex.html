@@ -4,14 +4,29 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Pokédex</title>
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+            rel="stylesheet">
         <link rel="stylesheet" href="../styles/styles.css">
         <link rel="stylesheet" href="../styles/pokedex.css">
     </head>
     <body>
+
+        <!-- Side Nav -->
+        <div id="mySidebar" class="sidebar">
+            <a href="index.html">Home</a>
+            <a href="pages/pokedex.html">Pokedex</a>
+            <a href="pages/my-pokemon.html">My Pokemon</a>
+            <a href="pages/battle.html">Battles</a>
+        </div>
+
+        <!-- Nav -->
         <header>
+            <button class="openbtn" onclick="openCloseNav()"><i
+                    class="fa-solid fa-bars"></i></button>
             <div>
-                <h1><a href="../index.html">Pokédex<span style="font-size: 15px;">.pt</span></a></h1>
+                <h1><a href="../index.html">Pokédex<span
+                            style="font-size: 15px;">.pt</span></a></h1>
             </div>
             <div>
                 <input
@@ -28,43 +43,61 @@
                 </nav>
             </div>
         </header>
+
+        <!-- Main Container -->
         <div class="container">
-            <aside class="battle-panel">
+            <div class="openCloseAside" onclick="openCloseAside()">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+            <aside id="battle-panel">
                 <div class="user-info">
-                    <img src="img/profile-default.png" alt="User Avatar" class="user-avatar" />
+                    <img src="img/profile-default.png" alt="User Avatar"
+                        class="user-avatar" />
                     <h2 class="user-name">Ash Ketchum</h2>
-                    <p class="user-stats">Victories: <span id="victories">0</span> | Defeats: <span id="defeats">0</span></p>
-                    <button class="edit-button" onclick="openEditPopup()">Edit Profile</button>
+                    <h4 class="user-email">ash.ketchum@emaiaaaaaal.com</h4>
+                    <p class="user-stats">Victories: <span
+                            id="victories">0</span> | Defeats: <span
+                            id="defeats">0</span></p>
+                    <button class="edit-button" onclick="openEditPopup()">Edit
+                        Profile</button>
                 </div>
                 <h2>Your Battle Team</h2>
                 <ul id="battleTeam"></ul>
             </aside>
-            
+
             <!-- Popup Modal -->
             <div id="editPopup" class="popup">
                 <div class="popup-content">
                     <div class="popup-header">
-                        <span class="close-button" onclick="closeEditPopup()">&times;</span>
+                        <span class="close-button"
+                            onclick="closeEditPopup()">&times;</span>
                         <h2>Edit Profile</h2>
                     </div>
                     <form id="editForm">
                         <div class="preview-container">
-                            <img id="previewAvatar" src="img/profile-default.png" alt="Preview Avatar" class="preview-avatar" onclick="triggerFileInput()" />
+                            <img id="previewAvatar"
+                                src="img/profile-default.png"
+                                alt="Preview Avatar" class="preview-avatar"
+                                onclick="triggerFileInput()" />
                         </div>
-                        <input type="file" id="userAvatar" accept="image/*" onchange="previewImage()" hidden />
+                        <input type="file" id="userAvatar" accept="image/*"
+                            onchange="previewImage()" hidden />
 
                         <label for="userName">Name:</label>
                         <input type="text" id="userName" value="Ash Ketchum" />
 
-                        <button type="button" onclick="saveUserInfo()" class="save-button">Save Changes</button>
+                        <button type="button" onclick="saveUserInfo()"
+                            class="save-button">Save Changes</button>
                     </form>
                 </div>
             </div>
-            <main>
+
+            <!-- Main Content -->
+            <main onclick="closeAside()">
                 <div id="pokemonList" class="pokemon-list"></div>
             </main>
         </div>
         <script src="../scripts/pokedex.js"></script>
     </body>
-    
+
 </html>

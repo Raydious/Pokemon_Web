@@ -30,81 +30,83 @@ header {
     z-index: 1000;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     flex-wrap: wrap;
-}
 
-header>div {
-    flex: 1;
-    display: initial;
-}
+    div {
+        flex: 1;
+        display: initial;
 
-header>div:first-child {
-    text-align: left;
-}
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            display: inline-block;
+            transform: scale(1);
+            transition: transform 0.5s ease;
 
-header>div:nth-child(3) {
-    text-align: center;
-    flex: 2;
-}
+            a {
+                color: white;
+                text-decoration: none;
+                transform: scale(1);
+                transition: transform 0.3s ease;
+            }
 
-header>div:last-child {
-    text-align: right;
-}
+            a:hover {
+                color: #f7d02c;
+                transform: scale(1.1);
+            }
+        }
 
-header h1 {
-    margin: 0;
-    font-size: 24px;
-    display: inline-block;
-    transform: scale(1);
-    transition: transform 0.5s ease
-}
+        h1:hover {
+            transform: scale(1.1);
+        }
 
-header h1:hover {
-    transform: scale(1.1);
-}
+        nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 20px;
 
-header h1 a {
-    color: white;
-    text-decoration: none;
-    transform: scale(1);
-    transition: transform 0.3s ease
-}
+            a {
+                color: white;
+                text-decoration: none;
+                text-align: center;
+                font-size: 16px;
+                transition: color 0.3s;
+                transform: scale(1);
+                transition: transform 0.5s ease
+            }
 
-header h1 a:hover {
-    color: #f7d02c;
-    transform: scale(1.1);
-}
+            a:hover {
+                color: #f7d02c;
+                transform: scale(1.1);
+            }
+        }
 
-nav {
-    display: inline-flex;
-    gap: 20px;
-}
+        #searchBar {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 200px;
+            transition: width 0.3s ease;
+        }
+        
+        #searchBar:focus {
+            width: 100%;
+            outline: none;
+            border-color: #f7d02c;
+        }
+    }
 
-nav a {
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    transition: color 0.3s;
-    transform: scale(1);
-    transition: transform 0.5s ease
-}
-
-nav a:hover {
-    color: #f7d02c;
-    transform: scale(1.1);
-}
-
-#searchBar {
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 200px;
-    transition: width 0.3s ease;
-}
-
-#searchBar:focus {
-    width: 100%;
-    outline: none;
-    border-color: #f7d02c;
+    div:first-child {
+        text-align: left;
+    }
+    
+    div:nth-child(3) {
+        text-align: center;
+        flex: 2;
+    }
+    
+    div:last-child {
+        text-align: right;
+    }
 }
 
 @media (max-width: 768px) {
@@ -141,26 +143,28 @@ nav a:hover {
 
 .sidebar {
     height: 100dvh;
-    width: 0;
-    z-index: 1;
+    width: 250px;
+    margin-left: -250px;
+    z-index: 2;
     position: fixed;
-    background-color: #333;
+    background: linear-gradient(to left, #444, #222);
+    border-right: 5px solid #f7d02c;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 80px;
-}
 
-.sidebar a {
-    margin: 10px;
-    padding: 10px;
-    color: white;
-    text-decoration: none;
-    font-size: 20px;
-    display: block;
-    transition: 0.3s;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    margin-bottom: 15px;
+    a {
+        margin: 10px;
+        padding: 10px;
+        color: white;
+        text-decoration: none;
+        font-size: 20px;
+        display: block;
+        transition: 0.3s;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
 }
 
 .openbtn {
@@ -183,6 +187,12 @@ nav a:hover {
     }
 
     header>div {
+        display: none;
+    }
+}
+
+@media (min-width: 768px) {
+    .sidebar {
         display: none;
     }
 }
