@@ -70,7 +70,7 @@ header>div:nth-child(3) {
     position: absolute;
     width: 200px;
     height: 200px;
-    background-size: 130%;
+    background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
     animation: pokemonFloat 2s infinite alternate ease-in-out, pokemonPulse 3s infinite;
