@@ -24,6 +24,7 @@ const apiUrl = 'https://pokeapi.co/api/v2/pokemon';
 const limit = 50; // Number of Pokémon to fetch at a time
 let offset = 0; // Start fetching from the first Pokémon
 let isLoading = false; // Prevent multiple simultaneous loads
+let catchingPokemon = false;
 
 async function fetchPokemon() {
     if (isLoading) return; // Prevent fetching if already loading
@@ -49,40 +50,6 @@ async function fetchPokemon() {
     }
 }
 
-function displayPokemon(pokemon) {
-    const pokemonList = document.getElementById('pokemonList');
-
-    // Extract stats
-    const stats = pokemon.stats.reduce((acc, stat) => {
-        acc[stat.stat.name] = stat.base_stat;
-        return acc;
-    }, {});
-
-    // Get the primary type of the Pokémon
-    const primaryType = pokemon.types[0].type.name;
-    const backgroundColor = typeColors[primaryType] || '#ffffff'; // Default to white if type not found
-
-    // Create a card for each Pokémon
-    const pokemonCard = document.createElement('div');
-    pokemonCard.classList.add('pokemon-card');
-    pokemonCard.setAttribute('data-name', pokemon.name.toLowerCase()); // Store the name for filtering
-    pokemonCard.style.backgroundColor = backgroundColor; // Set background color based on type
-
-    pokemonCard.innerHTML = `
-        <h3>${pokemon.name.toUpperCase()}</h3>
-        <img class="pokemon-img" src="${pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default}" alt="${pokemon.name}" />
-        <p><strong>Type:</strong> ${pokemon.types.map(type => type.type.name).join(", ")}</p>
-        <p><strong>Attack:</strong> ${stats.attack}</p>
-        <p><strong>Defense:</strong> ${stats.defense}</p>
-        <p><strong>HP:</strong> ${stats.hp}</p>
-    `;
-
-    // Add the card to the DOM
-    pokemonList.appendChild(pokemonCard);
-
-    // Observe the card for visibility
-    observer.observe(pokemonCard);
-}
 
 // Filter Pokémon by name
 function filterPokemon() {
@@ -381,3 +348,115 @@ function closeAside() {
     // Close aside
     this.openCloseAside();
 }
+
+/// Wait for the DOM to load
+document.addEventListener("DOMContentLoaded", () => {
+    const modalContainer = document.querySelector(".container-modal");
+    if (modalContainer) {
+        if (catchingPokemon) {
+            modalContainer.style.display = "block"; // Show the modal
+        } else {
+            modalContainer.style.display = "none"; // Hide the modal
+        }
+    }
+});
+
+
+
+// Function to handle card expansion
+function expandCard(card) {
+    const cardRect = card.getBoundingClientRect(); // Get card position
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    // Create a placeholder to maintain grid space
+    const placeholder = document.createElement('div');
+    placeholder.className = 'pokemon-card-placeholder';
+    placeholder.style.width = `${card.offsetWidth}px`;
+    placeholder.style.height = `${card.offsetHeight}px`;
+
+    // Insert the placeholder in the card's position
+    card.parentElement.insertBefore(placeholder, card);
+    card.dataset.placeholder = 'true'; // Mark the card with a placeholder
+
+    // Calculate position offsets
+    const xOffset = windowWidth / 2 - (cardRect.left + cardRect.width / 2);
+    const yOffset = windowHeight / 2 - (cardRect.top + cardRect.height / 2);
+
+    // Apply transformations
+    card.style.position = 'fixed';
+    card.style.zIndex = '1000';
+    card.style.left = `${cardRect.left}px`;
+    card.style.top = `${cardRect.top}px`;
+    card.style.transform = `translate(${xOffset}px, ${yOffset}px) scale(2)`;
+    card.style.transition = 'all 0.5s ease-in-out, z-index 0s';
+
+    // Add expanded class
+    card.classList.add('expanded');
+
+    // Show the overlay with opacity animation
+    const overlay = document.querySelector('.overlay');
+    overlay.classList.add('visible');
+
+    // Disable scrolling
+    document.body.classList.add('no-scroll');
+}
+
+// Function to collapse the card
+function collapseCard(card) {
+    const placeholder = card.parentElement.querySelector('.pokemon-card-placeholder');
+
+    // Add collapsing class to enable z-index transition
+    card.classList.add('collapsing');
+
+    // Reset transformations
+    card.style.transform = 'translate(0, 0) scale(1)';
+    card.style.transition = 'all 0.5s ease-in-out';
+
+    // Remove expanded class after animation
+    setTimeout(() => {
+        card.style.position = '';
+        card.style.zIndex = '';
+        card.style.left = '';
+        card.style.top = '';
+        card.style.width = '';
+        card.style.height = '';
+        card.style.transform = '';
+        card.style.transition = '';
+        card.classList.remove('expanded');
+        card.classList.remove('collapsing');
+
+        // Remove the placeholder
+        if (placeholder) {
+            placeholder.remove();
+        }
+    }, 500);
+
+    // Hide the overlay with opacity animation
+    const overlay = document.querySelector('.overlay');
+    overlay.classList.remove('visible');
+
+    // Re-enable scrolling
+    document.body.classList.remove('no-scroll');
+}
+
+// Add event listeners to all cards
+document.addEventListener('click', (event) => {
+    const card = event.target.closest('.pokemon-card'); // Check if the click was on a card
+    const overlay = document.querySelector('.overlay'); // Get the overlay element
+
+    if (card && !card.classList.contains('expanded')) {
+        // Expand the clicked card
+        expandCard(card);
+    } else if (!card && overlay && overlay.classList.contains('visible')) {
+        // Collapse the expanded card if clicking outside any card
+        const expandedCard = document.querySelector('.pokemon-card.expanded');
+        if (expandedCard) collapseCard(expandedCard);
+    }
+});
+
+// Add the overlay to the DOM
+document.body.insertAdjacentHTML('beforeend', '<div class="overlay"></div>');
+
+
+
