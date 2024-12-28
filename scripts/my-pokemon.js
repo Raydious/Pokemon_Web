@@ -1,6 +1,7 @@
 const gameArea = document.getElementById("gameArea");
 const pokemon = document.getElementById("pokemon");
 const pokeball = document.getElementById("pokeball");
+let currentPokemon = null;
 
 // Define the common spawn area
 const spawnArea = {
@@ -10,28 +11,41 @@ const spawnArea = {
     maxLeft: 50, // Maximum % from the left of the game area
 };
 
-// Fetch a random Pokémon and spawn it within the defined area
-async function fetchPokemon() {
-    const randomId = Math.floor(Math.random() * 150) + 1;
-    console.log("Fetching Pokémon with ID:", randomId);
-    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
-    const data = await response.json();
-    const sprite = data.sprites.front_default;
+async function fetchPokemonById(id) {
+  try {
+    console.log("bob: ", id);
+    
+      console.log(`Fetching Pokémon with ID: ${id}`);
+      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+      const data = await response.json();
+      const sprite = data.sprites.front_default;
 
-    console.log("Fetched Pokémon:", data.name);
-    console.log("Pokémon sprite URL:", sprite);
+      console.log(`Fetched Pokémon: ${data.name}`);
+      console.log(`Pokémon sprite URL: ${sprite}`);
 
-    // Set the Pokémon sprite
-    pokemon.style.backgroundImage = `url(${sprite})`;
+      // Set the Pokémon sprite
+      pokemon.style.backgroundImage = `url(${sprite})`;
 
-    // Randomize position within the spawn area
-    const top = `${Math.random() * (spawnArea.maxTop - spawnArea.minTop) + spawnArea.minTop}%`;
-    const left = `${Math.random() * (spawnArea.maxLeft - spawnArea.minLeft) + spawnArea.minLeft}%`;
-    pokemon.style.top = top;
-    pokemon.style.left = left;
+      // Randomize position within the spawn area
+      const top = `${Math.random() * (spawnArea.maxTop - spawnArea.minTop) + spawnArea.minTop}%`;
+      const left = `${Math.random() * (spawnArea.maxLeft - spawnArea.minLeft) + spawnArea.minLeft}%`;
+      pokemon.style.top = top;
+      pokemon.style.left = left;
 
-    console.log(`Pokémon positioned at top: ${top}, left: ${left}`);
+      console.log(`Pokémon positioned at top: ${top}, left: ${left}`);
+
+      // Store current Pokémon details in the global variable
+      currentPokemon = { id: data.id, name: data.name };
+  } catch (error) {
+      console.error(`Error fetching Pokémon with ID ${id}:`, error);
+  }
 }
+
+document.addEventListener("selectPokemonById", (event) => {
+  const { id } = event.detail;
+  console.log(`Received request to fetch Pokémon with ID: ${id}`);
+  fetchPokemonById(id);
+});
 
 // Variables to track throw movement
 let isDragging = false;
@@ -129,8 +143,26 @@ function handleDragEnd() {
       ballRect.bottom > pokemonRect.top
     ) {
       console.log("Collision detected! Pokémon caught.");
+      const myEvent = new CustomEvent('caughtPokemonEvent', { detail: { message: 'Caught the Pokémon', pokemonId: currentPokemon.id } });
+      document.dispatchEvent(myEvent);
       alert("You caught the Pokémon!");
-      fetchPokemon(); // Load a new Pokémon
+
+      // Store caught Pokémon in local storage
+      const caughtPokemon = {
+        id: currentPokemon.id,
+        name: currentPokemon.name,
+      };
+
+      // Get existing list from local storage or initialize an empty array
+      const myPokemons = JSON.parse(localStorage.getItem('myPokemons')) || [];
+      myPokemons.push(caughtPokemon); // Add the caught Pokémon
+      localStorage.setItem('myPokemons', JSON.stringify(myPokemons)); // Update local storage
+
+      console.log("Caught Pokémon saved to local storage:", caughtPokemon);
+
+      console.log(JSON.parse(localStorage.getItem('myPokemons')));
+
+      fetchPokemonById(); // Load a new Pokémon
     } else {
       console.log("No collision. Pokémon escaped.");
       alert("The Pokémon escaped!");
@@ -182,4 +214,4 @@ document.addEventListener("touchend", handleDragEnd);
 
 // Load the first Pokémon
 console.log("Game initialized. Loading the first Pokémon...");
-fetchPokemon();
+fetchPokemonById();

@@ -21,8 +21,6 @@ const typeColors = {
 };
 
 const apiUrl = 'https://pokeapi.co/api/v2/pokemon';
-const limit = 50; // Number of Pokémon to fetch at a time
-let offset = 0; // Start fetching from the first Pokémon
 let isLoading = false; // Prevent multiple simultaneous loads
 let catchingPokemon = false;
 
@@ -31,7 +29,7 @@ async function fetchPokemon() {
     isLoading = true;
 
     try {
-        const response = await fetch(`${apiUrl}?limit=${limit}&offset=${offset}`);
+        const response = await fetch(`${apiUrl}?limit=999999&offset=0`);
         const data = await response.json();
         const pokemonResults = data.results;
 
@@ -40,9 +38,6 @@ async function fetchPokemon() {
             const pokemonData = await fetch(pokemon.url).then(res => res.json());
             displayPokemon(pokemonData);
         }
-
-        // Update the offset for the next fetch
-        offset += limit;
     } catch (error) {
         console.error("Error fetching Pokémon data:", error);
     } finally {
@@ -55,10 +50,15 @@ async function fetchPokemon() {
 function filterPokemon() {
     const searchTerm = document.getElementById('searchBar').value.toLowerCase();
     const pokemonCards = document.querySelectorAll('.pokemon-card');
+    console.log(pokemonCards);
+
     pokemonCards.forEach(card => {
         const name = card.getAttribute('data-name');
         if (name.includes(searchTerm)) {
+            console.log("Enter");
+
             card.classList.remove('hidden');
+            card.classList.add('visible');
         } else {
             card.classList.add('hidden');
         }
@@ -77,16 +77,6 @@ const observer = new IntersectionObserver((entries) => {
 }, {
     threshold: 0.1, // Trigger when 10% of the card is visible
     rootMargin: '500px 0px 300px 0px' // Add a margin of 100px above and below the viewport
-});
-
-// Detect when the user scrolls to 90% of the page height
-window.addEventListener('scroll', () => {
-    const scrollPosition = window.innerHeight + window.scrollY;
-    const threshold = document.body.offsetHeight * 0.9; // 90% of the page height
-
-    if (scrollPosition >= threshold) {
-        fetchPokemon(); // Fetch more Pokémon when reaching 90%
-    }
 });
 
 // Initial fetch
@@ -125,6 +115,7 @@ function renderBattleTeam() {
 
 // Add a Pokémon to the battle team
 function addToBattleTeam(pokemonName, pokemonImage) {
+    event.stopPropagation();
     if (battleTeam.length >= 5) {
         alert('You can only have 5 Pokémon in your battle team.');
         return;
@@ -159,10 +150,16 @@ function displayPokemon(pokemon) {
     const primaryType = pokemon.types[0].type.name;
     const backgroundColor = typeColors[primaryType] || '#ffffff'; // Default to white if type not found
 
+    // Check if the Pokémon exists in myPokemons
+    const myPokemons = JSON.parse(localStorage.getItem('myPokemons')) || [];
+    const isCaught = myPokemons.some((p) => p.name.toLowerCase() === pokemon.name.toLowerCase());
+
     // Create a card for each Pokémon
     const pokemonCard = document.createElement('div');
     pokemonCard.classList.add('pokemon-card');
     pokemonCard.setAttribute('data-name', pokemon.name.toLowerCase()); // Store the name for filtering
+    pokemonCard.setAttribute('data-id', pokemon.id); 
+    pokemonCard.setAttribute('data-color', backgroundColor); 
     pokemonCard.style.background = `radial-gradient(circle at 50% 0%, ${backgroundColor} 36%, #ffffff 36%)`; // Set background color based on type
 
     const pokemonImage =
@@ -172,6 +169,36 @@ function displayPokemon(pokemon) {
     const typeHtml = pokemon.types.map((item) => {
         return `<span style="background-color: ${typeColors[item.type.name]}"}>${item.type.name}</span>`;
     }).join("");
+
+    // Create a button based on the Pokémon's status
+    const button = document.createElement('button');
+    if (isCaught) {
+        // If the Pokémon is already caught
+        button.textContent = "Add to Team";
+        button.onclick = () => addToBattleTeam(pokemon.name, pokemonImage);
+    } else {
+        // If the Pokémon is not caught
+        button.textContent = "Catch Pokémon";
+        button.onclick = () => catchPokemon(pokemon.name, pokemon.id);
+    }
+
+    // Style the button
+    button.style.backgroundColor = isCaught ? backgroundColor : '#ff5959'; // Use a red color for "Catch Pokémon"
+    button.style.color = '#fff';
+    button.style.border = 'none';
+    button.style.borderRadius = '15px';
+    button.style.padding = '10px 20px';
+    button.style.margin = '15px auto 0';
+    button.style.display = 'block';
+    button.style.fontWeight = 'bold';
+    button.style.cursor = 'pointer';
+    button.style.transition = 'transform 0.2s ease, background-color 0.3s ease';
+    button.onmouseover = () => {
+        const currentColor = button.style.backgroundColor; // Get the current color
+        const hexColor = currentColor.startsWith('#') ? currentColor : rgbToHex(currentColor); // Convert to hex if needed
+        button.style.backgroundColor = darkenColor(hexColor, 40); // Apply darkening
+    };
+    button.onmouseout = () => (button.style.backgroundColor = isCaught ? backgroundColor : '#ff5959');
 
     pokemonCard.innerHTML = `
         <p class="hp">
@@ -197,10 +224,24 @@ function displayPokemon(pokemon) {
             <p>Speed</p>
           </div>
         </div>
-        <button onclick="addToBattleTeam('${pokemon.name}', '${pokemonImage}')">Add to Team</button>
     `;
 
-    
+    // Add button to the card
+    pokemonCard.appendChild(button);
+
+    // Add PokéBall icon if the Pokémon exists in myPokemons
+    if (isCaught) {
+        const pokeballIcon = document.createElement('div');
+        pokeballIcon.classList.add('pokeball-icon');
+        pokeballIcon.innerHTML = `<img src="../img/pokeball.png" alt="Caught Pokémon" style="width: 100%" />`; // Replace with the actual path to your PokéBall icon
+        pokeballIcon.style.position = 'absolute';
+        pokeballIcon.style.top = '10px';
+        pokeballIcon.style.left = '15px';
+        pokeballIcon.style.width = '40px';
+        pokeballIcon.style.height = '40px';
+        pokeballIcon.style.pointerEvents = 'none'; // Prevent the icon from interfering with clicks
+        pokemonCard.appendChild(pokeballIcon);
+    }
 
     // Add the card to the DOM
     pokemonList.appendChild(pokemonCard);
@@ -209,21 +250,133 @@ function displayPokemon(pokemon) {
     observer.observe(pokemonCard);
 }
 
+
+// Helper function to darken a color for btns
+function darkenColor(color, amount) {
+    const colorInt = parseInt(color.slice(1), 16); // Convert hex to integer
+    const r = Math.max((colorInt >> 16) - amount, 0);
+    const g = Math.max((colorInt >> 8 & 0x00FF) - amount, 0);
+    const b = Math.max((colorInt & 0x0000FF) - amount, 0);
+    return `#${(r << 16 | g << 8 | b).toString(16).padStart(6, '0')}`;
+}
+
+function rgbToHex(rgb) {
+    const match = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+    if (!match) return rgb; // Return the original value if it's not in rgb format
+
+    const r = parseInt(match[1]);
+    const g = parseInt(match[2]);
+    const b = parseInt(match[3]);
+
+    return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
+}
+
+function catchPokemon(name, id) {
+    event.stopPropagation();
+    const modalContainer = document.querySelector(".container-modal");
+    //if (modalContainer) {
+    //    modalContainer.style.display = "block"; // Show the modal
+    //}
+
+    modalContainer.classList.add('open')
+
+
+    // Show the overlay with opacity animation
+    const overlay = document.querySelector('.overlay');
+    overlay.classList.add('visible');
+
+    // Dispatch a custom event with the Pokémon ID
+    const customEvent = new CustomEvent("selectPokemonById", { detail: { id } });
+    document.dispatchEvent(customEvent);
+}
+
 // Initial rendering of battle team
 renderBattleTeam();
 
+// Listen for the custom event
+document.addEventListener('caughtPokemonEvent', (event) => {
+    console.log('Custom event triggered:', event.detail.message);
+
+    const { pokemonId } = event.detail; // Get the Pokémon ID from the event detail
+    console.log("pokemonId: ", pokemonId);
+    
+
+    // Hide the modal
+    const modalContainer = document.querySelector(".container-modal");
+    if (modalContainer) {
+        modalContainer.classList.remove('open')
+
+        // Hide the overlay with opacity animation
+        const overlay = document.querySelector('.overlay');
+        overlay.classList.remove('visible');
+    }
+
+    // Find the Pokémon card corresponding to the caught Pokémon
+    const pokemonCard = document.querySelector(`.pokemon-card[data-id="${pokemonId}"]`);
+    if (pokemonCard) {
+        // Update the button text
+        const button = pokemonCard.querySelector('button');
+        if (button) {
+            button.textContent = "Add to Team";
+            button.style.backgroundColor = pokemonCard.getAttribute('data-color');
+            button.onmouseover = () => (button.style.backgroundColor = darkenColor(button.style.backgroundColor, 40));
+            button.onmouseout = () => (button.style.backgroundColor = pokemonCard.getAttribute('data-color'));
+            button.onclick = () => {
+                const pokemonName = pokemonCard.getAttribute('data-name');
+                const pokemonImage = pokemonCard.querySelector('img').src;
+                addToBattleTeam(pokemonName, pokemonImage);
+            };
+        }
+
+        // Add the PokéBall icon
+        let pokeballIcon = pokemonCard.querySelector('.pokeball-icon');
+        if (!pokeballIcon) {
+            pokeballIcon = document.createElement('div');
+            pokeballIcon.classList.add('pokeball-icon');
+            pokeballIcon.innerHTML = `<img src="../img/pokeball.png" alt="Caught Pokémon" style="width: 100%" />`; // Replace with your actual PokéBall image path
+            pokeballIcon.style.position = 'absolute';
+            pokeballIcon.style.top = '10px';
+            pokeballIcon.style.left = '15px';
+            pokeballIcon.style.width = '40px';
+            pokeballIcon.style.height = '40px';
+            pokeballIcon.style.pointerEvents = 'none';
+            pokemonCard.appendChild(pokeballIcon);
+        }
+    } else {
+        console.warn(`No card found for Pokémon with ID ${pokemonId}`);
+    }
+});
+
 
 const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {
-    avatar: 'img/profile-default.png',
+    avatar: '../img/default_img.jpg',
     name: 'Ash Ketchum',
+    email: 'ash.ketchum@email.com',
+    pokemonFavorite: 'Bulbasaur'
 };
 
 // Populate user info dynamically
 function renderUserInfo() {
     document.querySelector('.preview-avatar').src = userInfo.avatar;
-    document.getElementById('userName').value = userInfo.name;
+    document.getElementById('userName').value =
+        userInfo.name !== undefined && userInfo.name !== null
+            ? userInfo.name : 'Ash Ketchum';
+    document.getElementById('userEmail').value =
+        userInfo.email !== undefined && userInfo.email !== null
+            ? userInfo.email : 'ash.ketchum@email.com';
+    document.getElementById('userPokemon').value =
+        userInfo.pokemonFavorite !== undefined && userInfo.pokemonFavorite !== null
+            ? userInfo.pokemonFavorite : 'Bulbasaur';
     document.querySelector('.user-avatar').src = userInfo.avatar;
-    document.querySelector('.user-name').textContent = userInfo.name;
+    document.querySelector('.user-name').textContent =
+        userInfo.name !== undefined && userInfo.name !== null
+            ? userInfo.name : 'Ash Ketchum';
+    document.querySelector('.user-email').textContent =
+        userInfo.email !== undefined && userInfo.email !== null
+            ? userInfo.email : 'ash.ketchum@email.com';
+    document.querySelector('.user-pokemon').textContent =
+        userInfo.pokemonFavorite !== undefined && userInfo.pokemonFavorite !== null
+            ? userInfo.pokemonFavorite : 'Bulbasaur';
 }
 
 // Open the popup
@@ -261,6 +414,32 @@ function previewImage() {
 // Save user info and update the UI
 function saveUserInfo() {
     const name = document.getElementById('userName').value;
+    const email = document.getElementById('userEmail').value;
+    const pokemonFavorite = document.getElementById('userPokemon').value;
+
+    // Validate name
+    if (!name) {
+        document.getElementById('error').textContent = 'Name is required.';
+        return;
+    }
+
+    // Validate email
+    if (!email) {
+        document.getElementById('error').textContent = 'Email is required.';
+        return;
+        
+    } else if (!validateEmail(email)) {
+        document.getElementById('error').textContent = 'Invalid email format.';
+        return;
+    }
+
+    // Validate Pokémon favorite
+    if (!pokemonFavorite) {
+        document.getElementById('error').textContent = 'Favorite Pokémon is required.';
+        return;
+    }
+
+    document.getElementById('error').textContent = "";
 
     // Handle profile image
     const avatarInput = document.getElementById('userAvatar');
@@ -268,16 +447,24 @@ function saveUserInfo() {
         const reader = new FileReader();
         reader.onload = function (e) {
             userInfo.avatar = e.target.result; // Save the new avatar
-            updateAndSaveUserInfo(name);
+            updateAndSaveUserInfo(name, email, pokemonFavorite);
         };
         reader.readAsDataURL(avatarInput.files[0]);
     } else {
-        updateAndSaveUserInfo(name);
+        updateAndSaveUserInfo(name, email, pokemonFavorite);
     }
 }
 
-function updateAndSaveUserInfo(name) {
+// Helper function to validate email
+function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+function updateAndSaveUserInfo(name, email, pokemonFavorite) {
     userInfo.name = name;
+    userInfo.email = email;
+    userInfo.pokemonFavorite = pokemonFavorite;
 
     // Save to local storage
     localStorage.setItem('userInfo', JSON.stringify(userInfo));
@@ -350,16 +537,16 @@ function closeAside() {
 }
 
 /// Wait for the DOM to load
-document.addEventListener("DOMContentLoaded", () => {
-    const modalContainer = document.querySelector(".container-modal");
-    if (modalContainer) {
-        if (catchingPokemon) {
-            modalContainer.style.display = "block"; // Show the modal
-        } else {
-            modalContainer.style.display = "none"; // Hide the modal
-        }
-    }
-});
+//document.addEventListener("DOMContentLoaded", () => {
+//    const modalContainer = document.querySelector(".container-modal");
+//    if (modalContainer) {
+//        if (catchingPokemon) {
+//            modalContainer.style.display = "block"; // Show the modal
+//        } else {
+//            modalContainer.style.display = "none"; // Hide the modal
+//        }
+//    }
+//});
 
 
 
@@ -388,7 +575,7 @@ function expandCard(card) {
     card.style.zIndex = '1000';
     card.style.left = `${cardRect.left + 13}px`; //13 is manual fix for the position
     card.style.top = `${cardRect.top + 17}px`; //17 is manual fix for the position
-    card.style.transform = `translate(${xOffset}px, ${yOffset}px) scale(2)`;
+    card.style.transform = `translate(${xOffset}px, ${yOffset}px) scale(1.3)`;
     card.style.transition = 'all 0.5s ease-in-out, z-index 0s';
 
     // Add expanded class
@@ -457,6 +644,3 @@ document.addEventListener('click', (event) => {
 
 // Add the overlay to the DOM
 document.body.insertAdjacentHTML('beforeend', '<div class="overlay"></div>');
-
-
-

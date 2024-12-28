@@ -9,6 +9,7 @@
             rel="stylesheet">
         <link rel="stylesheet" href="../styles/styles.css">
         <link rel="stylesheet" href="../styles/pokedex.css">
+        <link rel="stylesheet" href="../styles/my-pokemon.css">
     </head>
     <body>
 
@@ -51,10 +52,11 @@
             </div>
             <aside id="battle-panel">
                 <div class="user-info">
-                    <img src="img/profile-default.png" alt="User Avatar"
+                    <img src="../img/default_img.jpg" alt="User Avatar"
                         class="user-avatar" />
                     <h2 class="user-name">Ash Ketchum</h2>
-                    <h4 class="user-email">ash.ketchum@emaiaaaaaal.com</h4>
+                    <h4 class="user-email">ash.ketchum@email.com</h4>
+                    <h4 class="user-pokemon">Bulbasaur</h4>
                     <p class="user-stats">Victories: <span
                             id="victories">0</span> | Defeats: <span
                             id="defeats">0</span></p>
@@ -76,8 +78,8 @@
                     <form id="editForm">
                         <div class="preview-container">
                             <img id="previewAvatar"
-                                src="img/profile-default.png"
-                                alt="Preview Avatar" class="preview-avatar"
+                                src="../img/default_img.jpg"
+                                alt="User Avatar" class="preview-avatar"
                                 onclick="triggerFileInput()" />
                         </div>
                         <input type="file" id="userAvatar" accept="image/*"
@@ -85,6 +87,14 @@
 
                         <label for="userName">Name:</label>
                         <input type="text" id="userName" value="Ash Ketchum" />
+
+                        <label for="userEmail">Email:</label>
+                        <input type="email" id="userEmail" value="ash.ketchum@email.com" />
+
+                        <label for="userEmail">Pokemon Favorite:</label>
+                        <input type="text" id="userPokemon" value="Bulbasaur" />
+
+                        <h4 id="error"></h4>
 
                         <button type="button" onclick="saveUserInfo()"
                             class="save-button">Save Changes</button>
@@ -99,13 +109,21 @@
 
             <div class="container-modal">
                 <div class="mask">
-                    <iframe src="my-pokemon.html" frameborder="0" width="100%" height="100%"></iframe>
+                    <div id="gameArea">
+                        <div class="pokemon" id="pokemon"></div>
+                        <div id="pokeballDock">
+                          <div class="dock">
+                            <div class="pokeball" id="pokeball"></div>
+                          </div>
+                        </div>
+                    </div>
                 </div>
                 
             </div>
         </div>
 
         <script src="../scripts/pokedex.js"></script>
+        <script src="../scripts/my-pokemon.js"></script>
     </body>
 
 </html>

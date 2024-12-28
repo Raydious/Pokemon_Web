@@ -1,10 +1,9 @@
 header>div:nth-child(2) {
-    text-align: center;
-    flex: 2;
+    text-align: left;
 }
 
 header>div:nth-child(3) {
-    text-align: right;
+    text-align: center;
     flex: 1;
 }
 
@@ -13,11 +12,8 @@ header>div:nth-child(3) {
 
 /* Game Area: Enhanced Visuals */
 #gameArea {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background: linear-gradient(to bottom, #87CEEB, #6BBF59, #3E8E41); /* Sky to grass gradient */
     box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.3); /* Add depth */
     overflow: hidden;
@@ -68,8 +64,8 @@ header>div:nth-child(3) {
 /* Pokémon: Enhanced Glow and Float Effect */
 .pokemon {
     position: absolute;
-    width: 200px;
-    height: 200px;
+    width: 100px;
+    height: 100px;
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
@@ -109,8 +105,8 @@ header>div:nth-child(3) {
     bottom: 25px;
     left: 50%;
     transform: translateX(-50%);
-    width: 60px;
-    height: 60px;
+    width: 45px;
+    height: 45px;
     background-image: url("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png");
     background-size: 150%;
     background-position: center;
@@ -119,12 +115,6 @@ header>div:nth-child(3) {
     animation: pokeballBounce 1.2s infinite;
     filter: drop-shadow(0px 6px 10px rgba(0, 0, 0, 0.5));
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-}
-
-/* PokéBall Glow on Hover */
-.pokeball:hover {
-    transform: scale(1.2);
-    box-shadow: 0px 6px 20px rgba(255, 50, 50, 0.8); /* Red glow when hovered */
 }
 
 /* PokéBall Bouncing Animation */
@@ -140,42 +130,13 @@ header>div:nth-child(3) {
     }
 }
 
-/* Scoreboard: Frosted Glass Effect */
-#infoBox {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: rgba(255, 255, 255, 0.1); /* Frosted glass effect */
-    backdrop-filter: blur(10px);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 15px;
-    font-family: "Arial", sans-serif;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-    z-index: 10;
-}
-
-/* Text Styling */
-#infoBox h2 {
-    font-size: 20px;
-    margin: 0;
-    text-align: center;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-#infoBox p {
-    font-size: 14px;
-    margin: 5px 0;
-    text-align: center;
-}
-
 /* PokéBall Dock */
 #pokeballDock {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 100px;
+    height: 70px;
     background: linear-gradient(to top, #222, rgba(0, 0, 0, 0.6)); /* Dark dock gradient */
     box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.5); /* Shadow above the dock */
     display: flex;
@@ -187,8 +148,8 @@ header>div:nth-child(3) {
 /* PokéBall Dock Visual */
 #pokeballDock .dock {
     position: relative;
-    width: 200px;
-    height: 80px;
+    width: 140px;
+    height: 50px;
     background: radial-gradient(circle, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.8)); /* Circular gradient */
     border-radius: 40px;
     border: 2px solid rgba(255, 255, 255, 0.2); /* Subtle border */

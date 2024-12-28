@@ -22,17 +22,16 @@ header {
     color: white;
     padding: 10px 20px;
     display: flex;
+    width: 100%;
     justify-content: space-between;
     align-items: center;
     align-content: initial;
-    position: sticky;
-    top: 0;
+    position: fixed;
     z-index: 1000;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     flex-wrap: wrap;
 
     div {
-        flex: 1;
         display: initial;
 
         h1 {
@@ -89,7 +88,7 @@ header {
         }
         
         #searchBar:focus {
-            width: 100%;
+            width: 70%;
             outline: none;
             border-color: #f7d02c;
         }
@@ -111,17 +110,16 @@ header {
 
 @media (max-width: 768px) {
     header {
-        flex-direction: column;
         text-align: center;
     }
 
     header>div {
         flex: 1;
-        margin-bottom: 10px;
     }
 
-    header>div:nth-child(2) {
+    header>div:nth-child(3) {
         flex: 1;
+        display: block;
     }
 
     #searchBar {
@@ -132,6 +130,10 @@ header {
     nav {
         justify-content: center;
         gap: 10px;
+    }
+
+    .pages {
+        display: none !important;
     }
 }
 
