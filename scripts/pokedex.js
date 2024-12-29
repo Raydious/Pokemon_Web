@@ -23,6 +23,8 @@ const typeColors = {
 const apiUrl = 'https://pokeapi.co/api/v2/pokemon';
 let isLoading = false; // Prevent multiple simultaneous loads
 let catchingPokemon = false;
+let isSearching = false;
+let allPokemonData = [];
 
 async function fetchPokemon() {
     if (isLoading) return; // Prevent fetching if already loading
@@ -31,12 +33,13 @@ async function fetchPokemon() {
     try {
         const response = await fetch(`${apiUrl}?limit=999999&offset=0`);
         const data = await response.json();
-        const pokemonResults = data.results;
+        allPokemonData = data.results;
 
         // Fetch details for each Pokémon
-        for (const pokemon of pokemonResults) {
+        for (const pokemon of allPokemonData) {
+            if (isSearching) break; // Stop fetching if a search is in progress
             const pokemonData = await fetch(pokemon.url).then(res => res.json());
-            displayPokemon(pokemonData);
+            if (!isSearching) displayPokemon(pokemonData);
         }
     } catch (error) {
         console.error("Error fetching Pokémon data:", error);
@@ -45,25 +48,35 @@ async function fetchPokemon() {
     }
 }
 
+let searchTimeout;
 
 // Filter Pokémon by name
 function filterPokemon() {
-    const searchTerm = document.getElementById('searchBar').value.toLowerCase();
-    const pokemonCards = document.querySelectorAll('.pokemon-card');
-    console.log(pokemonCards);
+    clearTimeout(searchTimeout);
 
-    pokemonCards.forEach(card => {
-        const name = card.getAttribute('data-name');
-        if (name.includes(searchTerm)) {
-            console.log("Enter");
+    searchTimeout = setTimeout(() => {
+        isSearching = true; // Indicate that a search is in progress
+        const searchTerm = document.getElementById('searchBar').value.toLowerCase();
+        const pokemonList = document.getElementById('pokemonList');
+        pokemonList.innerHTML = '';
 
-            card.classList.remove('hidden');
-            card.classList.add('visible');
-        } else {
-            card.classList.add('hidden');
+        if (searchTerm === '') {
+            isSearching = false; // Indicate that the search is complete
+            fetchPokemon();
+            return;
         }
-    });
+
+        const filteredPokemon = allPokemonData.filter(pokemon => 
+            pokemon.name.toLowerCase().startsWith(searchTerm)
+        );
+
+        filteredPokemon.forEach(async pokemon => {
+            const pokemonData = await fetch(pokemon.url).then(res => res.json())
+            displayPokemon(pokemonData);
+        });
+    }, 500);
 }
+document.getElementById('searchBar').addEventListener('input', filterPokemon);
 
 // Set up the Intersection Observer
 const observer = new IntersectionObserver((entries) => {
@@ -96,8 +109,8 @@ function renderBattleTeam() {
             if (pokemon) {
                 return `
                     <li>
-                        <img src="${pokemon.image}" alt="${pokemon.name}" class="battle-pokemon-img" />
-                        <span>${pokemon.name}</span>
+                        <img src="${pokemon.image}" alt="Pokemon Image" class="battle-pokemon-img" />
+                        <span>${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1).toLowerCase()}</span>
                         <button onclick="removeFromBattleTeam(${index})"><i class="fas fa-times"></i></button>
                     </li>
                 `;
@@ -206,7 +219,7 @@ function displayPokemon(pokemon) {
             ${stats.hp}
         </p>
         <img class="poke-img" src=${pokemonImage} alt="${pokemon.name}" />
-        <h2 class="poke-name">${pokemon.name.toUpperCase()}</h2>
+        <h2 class="poke-name">${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1).toLowerCase()}</h2>
         <div class="types">
             ${typeHtml}
         </div>
@@ -274,16 +287,13 @@ function rgbToHex(rgb) {
 function catchPokemon(name, id) {
     event.stopPropagation();
     const modalContainer = document.querySelector(".container-modal");
-    //if (modalContainer) {
-    //    modalContainer.style.display = "block"; // Show the modal
-    //}
-
     modalContainer.classList.add('open')
 
 
     // Show the overlay with opacity animation
     const overlay = document.querySelector('.overlay');
     overlay.classList.add('visible');
+    overlay.addEventListener('click', handleOverlayClick);
 
     // Dispatch a custom event with the Pokémon ID
     const customEvent = new CustomEvent("selectPokemonById", { detail: { id } });
@@ -295,11 +305,7 @@ renderBattleTeam();
 
 // Listen for the custom event
 document.addEventListener('caughtPokemonEvent', (event) => {
-    console.log('Custom event triggered:', event.detail.message);
-
     const { pokemonId } = event.detail; // Get the Pokémon ID from the event detail
-    console.log("pokemonId: ", pokemonId);
-    
 
     // Hide the modal
     const modalContainer = document.querySelector(".container-modal");
@@ -309,6 +315,7 @@ document.addEventListener('caughtPokemonEvent', (event) => {
         // Hide the overlay with opacity animation
         const overlay = document.querySelector('.overlay');
         overlay.classList.remove('visible');
+        overlay.removeEventListener('click', handleOverlayClick);
     }
 
     // Find the Pokémon card corresponding to the caught Pokémon
@@ -352,7 +359,9 @@ const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {
     avatar: '../img/default_img.jpg',
     name: 'Ash Ketchum',
     email: 'ash.ketchum@email.com',
-    pokemonFavorite: 'Bulbasaur'
+    pokemonFavorite: 'Bulbasaur',
+    victories: 0,
+    defeats: 0
 };
 
 // Populate user info dynamically
@@ -377,6 +386,12 @@ function renderUserInfo() {
     document.querySelector('.user-pokemon').textContent =
         userInfo.pokemonFavorite !== undefined && userInfo.pokemonFavorite !== null
             ? userInfo.pokemonFavorite : 'Bulbasaur';
+    document.querySelector('#victories').textContent =
+        userInfo.victories !== undefined && userInfo.victories !== null
+            ? userInfo.victories : '0';
+    document.querySelector('#victories').textContent =
+        userInfo.victories !== undefined && userInfo.victories !== null
+            ? userInfo.victories : '0';
 }
 
 // Open the popup
@@ -384,6 +399,10 @@ function openEditPopup() {
     const popup = document.getElementById('editPopup');
     popup.classList.add('show');
     document.getElementById('previewAvatar').src = userInfo.avatar;
+    document.getElementById('userName').value = userInfo.name;
+    document.getElementById('userEmail').value = userInfo.email;
+    document.getElementById('userPokemon').value = userInfo.pokemonFavorite;
+    document.getElementById('error').textContent = "";
 }
 
 // Close the popup
@@ -536,20 +555,6 @@ function closeAside() {
     this.openCloseAside();
 }
 
-/// Wait for the DOM to load
-//document.addEventListener("DOMContentLoaded", () => {
-//    const modalContainer = document.querySelector(".container-modal");
-//    if (modalContainer) {
-//        if (catchingPokemon) {
-//            modalContainer.style.display = "block"; // Show the modal
-//        } else {
-//            modalContainer.style.display = "none"; // Hide the modal
-//        }
-//    }
-//});
-
-
-
 // Function to handle card expansion
 function expandCard(card) {
     const cardRect = card.getBoundingClientRect(); // Get card position
@@ -626,6 +631,22 @@ function collapseCard(card) {
     // Re-enable scrolling
     document.body.classList.remove('no-scroll');
 }
+
+// Handle overlay click
+const handleOverlayClick = () => {
+    const overlay = document.querySelector('.overlay'); // Get the overlay element
+    const modalContainer = document.querySelector(".container-modal");
+
+    // Hide the modal
+    if (overlay.classList.contains('visible') && modalContainer) {
+        modalContainer.classList.remove('open');
+
+        // Hide the overlay with opacity animation
+        const overlay = document.querySelector('.overlay');
+        overlay.classList.remove('visible');
+        overlay.removeEventListener('click', handleOverlayClick);
+    }
+};
 
 // Add event listeners to all cards
 document.addEventListener('click', (event) => {

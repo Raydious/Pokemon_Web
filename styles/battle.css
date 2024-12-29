@@ -1,9 +1,216 @@
-header>div:nth-child(2) {
-    text-align: center;
-    flex: 2;
+@media (max-width: 768px) {
+
+    .openCloseAside {
+        display: flex !important;
+    }
 }
 
-header>div:nth-child(3) {
-    text-align: right;
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+    background-color: #eff3ff;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: space-between;
+}
+
+
+main {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+/* Opponent's cards */
+.opponent-cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 150px;
+    z-index: 2;
+}
+
+/* Player's cards */
+.player-cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 110px;
+}
+
+/* Card styling */
+.card {
+    background-color: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    width: 100px;
+    height: 150px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: absolute;
+    transform: rotate(var(--rotation)) translateX(var(--offsetX)) scale(1);
+
+    .front {
+        display: block;
+
+        .hp {
+            width: 50px;
+            background-color: #ffffff;
+            text-align: center;
+            margin-top: 8px;
+            padding: 8px;
+            border-radius: 30px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 12px;
+            font-weight: 400;
+
+            span {
+                font-size: 12px;
+                letter-spacing: 0.4px;
+                font-weight: 600;
+            }
+        }
+
+        .poke-img {
+            display: block;
+            width: 40px;
+            max-height: 200px;
+            position: relative;
+            margin: 20px auto;
+        }
+
+        .poke-name {
+            font-size: 12px;
+            text-align: center;
+            font-weight: 600;
+        }
+    }
+
+    .back {
+        display: none;
+
+        .types {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            align-items: center;
+            margin: 5px 0 5px 0;
+
+            span {
+                width: auto;
+                font-size: 12px;
+                letter-spacing: 0.4px;
+                font-weight: 600;
+                text-transform: capitalize;
+
+                padding: 5px 20px;
+                border-radius: 20px;
+                color: #ffffff;
+            }
+        }
+
+        .stats {
+            padding: 5px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            grid-template-areas:
+                "col1 col2"
+                "col3 col3";
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            text-align: center;
+
+            .col1 {
+                grid-area: col1;
+            }
+
+            .col2 {
+                grid-area: col2;
+            }
+
+            .col3 {
+                grid-area: col3;
+            }            
+
+            p {
+                font-size: 10px;
+                color: #404060;
+            }
+        }
+    }
+}
+
+.card:hover {
+    transform: rotate(var(--rotation)) translateX(var(--offsetX)) translateY(-10px) scale(1.1);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4);
+
+    .front {
+        display: none;
+    }
+
+    .back {
+        display: block;
+    }
+}
+
+/* Battlefield Section */
+.battlefield {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    /* Each column is 100px wide */
+    grid-template-rows: repeat(2, 150px);
+    /* Each row is 150px tall */
+    gap: 15px;
+    margin: 30px auto;
+    background: radial-gradient(circle, #f7d02c, #333);
+    border-radius: 12px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    position: relative;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Grid Cells */
+.grid-cell {
+    background-color: rgba(255, 255, 255, 0.9);
+    width: 100px;
+    /* Match card width */
+    height: 150px;
+    /* Match card height */
+    border: 2px solid #f7d02c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+/* Hover Effect for Grid Cells */
+.grid-cell:hover {
+    background-color: #ffcb05;
+    /* Pokémon yellow */
+    transform: scale(1.1);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+}
+
+.card {
+    position: absolute;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, top 0.2s, left 0.2s;
 }

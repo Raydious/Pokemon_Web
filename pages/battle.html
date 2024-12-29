@@ -4,29 +4,67 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Pokédex</title>
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+            rel="stylesheet">
         <link rel="stylesheet" href="../styles/styles.css">
         <link rel="stylesheet" href="../styles/battle.css">
     </head>
     <body>
+
+        <!-- Side Nav -->
+        <div id="mySidebar" class="sidebar">
+            <a href="../index.html">Home</a>
+            <a href="pokedex.html">Pokedex</a>
+            <a href="battle.html">Battles</a>
+        </div>
+
+        <!-- Nav -->
         <header>
+            <button class="openbtn" onclick="openCloseNav()"><i
+                    class="fa-solid fa-bars"></i></button>
             <div>
                 <h1><a href="../index.html">Pokédex<span
                             style="font-size: 15px;">.pt</span></a></h1>
             </div>
             <div>
-                <input
-                    type="text"
-                    id="searchBar"
-                    placeholder="Search Pokémon by name..."
-                    oninput="filterPokemon()" />
-            </div>
-            <div>
                 <nav>
                     <a href="pokedex.html">Pokedex</a>
-                    <a href="my-pokemon.html">My Pokemon</a>
                     <a href="battle.html">Battles</a>
                 </nav>
             </div>
         </header>
+        <main>
+            <!-- Opponent's cards -->
+            <section class="opponent-cards">
+                <div class="card" id="opponent-card-1" style="--rotation: -16deg; --offsetX: 120px;">Opponent Card 1</div>
+                <div class="card" id="opponent-card-2" style="--rotation: -8deg; --offsetX: 60px;">Opponent Card 2</div>
+                <div class="card" id="opponent-card-3" style="--rotation: 0deg; --offsetX: 0px;">Opponent Card 3</div>
+                <div class="card" id="opponent-card-4" style="--rotation: 8deg; --offsetX: -60px;">Opponent Card 4</div>
+                <div class="card" id="opponent-card-5" style="--rotation: 16deg; --offsetX: -120px;">Opponent Card 5</div>
+            </section>
+        
+            <!-- Battlefield -->
+            <section class="battlefield">
+                <div class="grid-cell" id="cell-1"></div>
+                <div class="grid-cell" id="cell-2"></div>
+                <div class="grid-cell" id="cell-3"></div>
+                <div class="grid-cell" id="cell-4"></div>
+                <div class="grid-cell" id="cell-5"></div>
+                <div class="grid-cell" id="cell-6"></div>
+            </section>
+        
+            <!-- Player's cards -->
+            <section class="player-cards">
+                <div class="card" id="player-card-1" style="--rotation: -16deg; --offsetX: -120px;">Player Card 1</div>
+                <div class="card" id="player-card-2" style="--rotation: -8deg; --offsetX: -60px;">Player Card 2</div>
+                <div class="card" id="player-card-3" style="--rotation: 0deg; --offsetX: 0px;">Player Card 3</div>
+                <div class="card" id="player-card-4" style="--rotation: 8deg; --offsetX: 60px;">Player Card 4</div>
+                <div class="card" id="player-card-5" style="--rotation: 16deg; --offsetX: 120px;">Player Card 5</div>
+            </section>
+        </main>
+        
+        
+        <script src="../scripts/battle.js"></script>
     </body>
 </html>
