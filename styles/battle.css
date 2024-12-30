@@ -3,6 +3,14 @@
     .openCloseAside {
         display: flex !important;
     }
+
+    body {
+        overflow-y: hidden !important;
+    }
+
+    main {
+        padding: 0px !important;
+    }
 }
 
 body {
@@ -23,6 +31,7 @@ main {
     flex-direction: column;
     justify-content: space-between;
     padding: 20px;
+    z-index: 1;
 }
 
 /* Opponent's cards */
@@ -30,7 +39,7 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 150px;
+    margin-top: 160px;
     z-index: 2;
 }
 
@@ -40,6 +49,7 @@ main {
     justify-content: center;
     align-items: center;
     margin-bottom: 110px;
+    z-index: 3;
 }
 
 /* Card styling */
@@ -53,25 +63,30 @@ main {
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: absolute;
-    transform: rotate(var(--rotation)) translateX(var(--offsetX)) scale(1);
+    transform: rotate(var(--rotation)) translateX(var(--offsetX)) scale(0);
 
     .front {
         display: block;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        overflow: hidden;
+        opacity: 1;
+        transition: transform 0.5s ease-in-out, opacity 0.25s ease-in-out;
+        transform: rotateY(0deg);
 
         .hp {
-            width: 50px;
-            background-color: #ffffff;
             text-align: center;
             margin-top: 8px;
             padding: 8px;
             border-radius: 30px;
             margin-left: auto;
             margin-right: auto;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 400;
 
             span {
-                font-size: 12px;
+                font-size: 14px;
                 letter-spacing: 0.4px;
                 font-weight: 600;
             }
@@ -86,14 +101,23 @@ main {
         }
 
         .poke-name {
-            font-size: 12px;
+            font-size: 14px;
             text-align: center;
             font-weight: 600;
         }
     }
 
     .back {
-        display: none;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column-reverse;
+        height: 100%;
+        width: 100%;
+        opacity: 0;
+        position: absolute;
+        transition: transform 0.5s ease-in-out, opacity 0.25s ease-in-out;
+        transform: rotateY(180deg);
+        overflow: hidden;
 
         .types {
             display: flex;
@@ -101,7 +125,7 @@ main {
             justify-content: center;
             gap: 5px;
             align-items: center;
-            margin: 5px 0 5px 0;
+            margin: 0px 0 5px 0;
 
             span {
                 width: auto;
@@ -139,7 +163,7 @@ main {
 
             .col3 {
                 grid-area: col3;
-            }            
+            }
 
             p {
                 font-size: 10px;
@@ -152,14 +176,32 @@ main {
 .card:hover {
     transform: rotate(var(--rotation)) translateX(var(--offsetX)) translateY(-10px) scale(1.1);
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4);
+    z-index: 1;
+}
+
+.card.card-scaled:hover {
+    transform: rotate(var(--rotation)) translateX(var(--offsetX)) translateY(-20px) scale(1.1);
+}
+
+.opponent-cards .card.card-scaled:hover {
+    transform: rotate(var(--rotation)) translateX(var(--offsetX)) translateY(20px) scale(1.1);
+}
+
+.card.active {
 
     .front {
-        display: none;
+        opacity: 0 !important;
+        transform: rotateY(180deg) !important;
     }
 
     .back {
-        display: block;
+        opacity: 1 !important;
+        transform: rotateY(0deg) !important;
     }
+}
+
+.card.card-scaled{
+    transform: rotate(var(--rotation)) translateX(var(--offsetX)) scale(1);
 }
 
 /* Battlefield Section */
@@ -179,6 +221,7 @@ main {
     overflow: hidden;
     justify-content: center;
     align-items: center;
+    transform: scale(0);
 }
 
 /* Grid Cells */
@@ -213,4 +256,102 @@ main {
 .card {
     position: absolute;
     transition: transform 0.3s ease, box-shadow 0.3s ease, top 0.2s, left 0.2s;
+}
+
+@keyframes wiggle {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-10deg);
+    }
+
+    50% {
+        transform: rotate(10deg);
+    }
+
+    75% {
+        transform: rotate(-10deg);
+    }
+}
+
+@keyframes attack {
+    0% {
+        transform: translate(0, 0) scale(1);
+        /* Start at original position */
+    }
+
+    30% {
+        transform: translate(30px, 30px) scale(1.1) skew(-3deg, -3deg);
+        /* Start moving and enlarge slightly */
+    }
+
+    50% {
+        transform: translate(60px, 60px) scale(1.2);
+        /* Peak movement and size */
+    }
+
+    70% {
+        transform: translate(40px, 40px) scale(1.15) skew(5deg, 5deg);
+        /* Slight recoil effect */
+    }
+
+    100% {
+        transform: translate(0, 0) scale(1);
+        /* Return to original position and size */
+    }
+}
+
+@keyframes hit {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+        box-shadow: none;
+    }
+
+    20% {
+        transform: translate(-30px, -30px) scale(0.9);
+        opacity: 0.8;
+        box-shadow: 0 0 10px 5px rgba(255, 0, 0, 0.5); /* Red glow */
+    }
+
+    40% {
+        transform: translate(5px, 5px) scale(1.1);
+        opacity: 1;
+        box-shadow: 0 0 15px 7px rgba(255, 0, 0, 0.7); /* Stronger red glow */
+    }
+
+    60% {
+        transform: translate(-10px, -10px) scale(1.05);
+        box-shadow: 0 0 10px 5px rgba(255, 0, 0, 0.5); /* Return to soft red glow */
+    }
+
+    100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+        box-shadow: none; /* Restore original state */
+    }
+}
+
+@keyframes scaleInCards {
+    0% {
+        transform: rotate(var(--rotation)) translateX(var(--offsetX)) scale(0);
+    }
+    100% {
+        transform: rotate(var(--rotation)) translateX(var(--offsetX)) scale(1);
+    }
+}
+
+@keyframes scaleInBatlefield {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
