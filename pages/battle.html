@@ -1,3 +1,9 @@
+<!-- Este ficheiro é onde se faz as batalhas de pokemons,
+     5 random pokemons vs 5 my pokemons.
+     Os my pokemons vem da pokedex, onde o utilizador tem que os apanhar
+     e adicionar a equipa -->
+
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -35,13 +41,15 @@
             </div>
         </header>
         <main>
+            <div id="turnPopup" class="turn-popup"></div>
+
             <!-- Opponent's cards -->
             <section class="opponent-cards">
-                <div class="card" id="opponent-card-1" style="--rotation: -16deg; --offsetX: 160px;">Opponent Card 1</div>
-                <div class="card" id="opponent-card-2" style="--rotation: -8deg; --offsetX: 80px;">Opponent Card 2</div>
-                <div class="card" id="opponent-card-3" style="--rotation: 0deg; --offsetX: 0px;">Opponent Card 3</div>
-                <div class="card" id="opponent-card-4" style="--rotation: 8deg; --offsetX: -80px;">Opponent Card 4</div>
-                <div class="card" id="opponent-card-5" style="--rotation: 16deg; --offsetX: -160px;">Opponent Card 5</div>
+                <div class="card" id="opponent-card-1" data-name="" style="--rotation: -16deg; --offsetX: 160px;">Opponent Card 1</div>
+                <div class="card" id="opponent-card-2" data-name="" style="--rotation: -8deg; --offsetX: 80px;">Opponent Card 2</div>
+                <div class="card" id="opponent-card-3" data-name="" style="--rotation: 0deg; --offsetX: 0px;">Opponent Card 3</div>
+                <div class="card" id="opponent-card-4" data-name="" style="--rotation: 8deg; --offsetX: -80px;">Opponent Card 4</div>
+                <div class="card" id="opponent-card-5" data-name="" style="--rotation: 16deg; --offsetX: -160px;">Opponent Card 5</div>
             </section>
         
             <!-- Battlefield -->
@@ -56,13 +64,16 @@
         
             <!-- Player's cards -->
             <section class="player-cards">
-                <div class="card" id="player-card-1" style="--rotation: -16deg; --offsetX: -160px;">Player Card 1</div>
-                <div class="card" id="player-card-2" style="--rotation: -8deg; --offsetX: -80px;">Player Card 2</div>
-                <div class="card" id="player-card-3" style="--rotation: 0deg; --offsetX: 0px;">Player Card 3</div>
-                <div class="card" id="player-card-4" style="--rotation: 8deg; --offsetX: 80px;">Player Card 4</div>
-                <div class="card" id="player-card-5" style="--rotation: 16deg; --offsetX: 160px;">Player Card 5</div>
+                <div class="card" id="player-card-1" data-name="" style="--rotation: -16deg; --offsetX: -160px;">Player Card 1</div>
+                <div class="card" id="player-card-2" data-name="" style="--rotation: -8deg; --offsetX: -80px;">Player Card 2</div>
+                <div class="card" id="player-card-3" data-name=""style="--rotation: 0deg; --offsetX: 0px;">Player Card 3</div>
+                <div class="card" id="player-card-4" data-name="" style="--rotation: 8deg; --offsetX: 80px;">Player Card 4</div>
+                <div class="card" id="player-card-5" data-name="" style="--rotation: 16deg; --offsetX: 160px;">Player Card 5</div>
             </section>
         </main>
+        <div class="animated-background"></div>
+        <div class="overlay"></div>
+        <div class="stars-container"></div>
         
         
         <script src="../scripts/battle.js"></script>
