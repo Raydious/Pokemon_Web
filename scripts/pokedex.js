@@ -139,11 +139,13 @@ function renderBattleTeam() {
 function addToBattleTeam(pokemonName, pokemonImage) {
     event.stopPropagation();
     if (battleTeam.length >= 5) {
-        alert('You can only have 5 Pokémon in your battle team.');
+        //alert('You can only have 5 Pokémon in your battle team.');
+        showPokemonGamePopup('pokemonPopup-team-full')
         return;
     }
     if (battleTeam.some((p) => p.name === pokemonName)) {
-        alert('This Pokémon is already in your battle team.');
+        //alert('This Pokémon is already in your battle team.');
+        showPokemonGamePopup('pokemonPopup-already-added')
         return;
     }
     battleTeam.push({ name: pokemonName, image: pokemonImage });
@@ -315,6 +317,7 @@ renderBattleTeam();
 // Listen for the custom event
 document.addEventListener('caughtPokemonEvent', (event) => {
     const { pokemonId } = event.detail; // Get the Pokémon ID from the event detail
+    console.log(`Caught Pokémon with ID ${pokemonId}`);
 
     // Hide the modal
     const modalContainer = document.querySelector(".container-modal");
@@ -326,40 +329,47 @@ document.addEventListener('caughtPokemonEvent', (event) => {
         overlay.classList.remove('visible');
         overlay.removeEventListener('click', handleOverlayClick);
     }
-
-    // Find the Pokémon card corresponding to the caught Pokémon
-    const pokemonCard = document.querySelector(`.pokemon-card[data-id="${pokemonId}"]`);
-    if (pokemonCard) {
-        // Update the button text
-        const button = pokemonCard.querySelector('button');
-        if (button) {
-            button.textContent = "Add to Team";
-            button.style.backgroundColor = pokemonCard.getAttribute('data-color');
-            button.onmouseover = () => (button.style.backgroundColor = darkenColor(button.style.backgroundColor, 40));
-            button.onmouseout = () => (button.style.backgroundColor = pokemonCard.getAttribute('data-color'));
-            button.onclick = () => {
-                const pokemonName = pokemonCard.getAttribute('data-name');
-                const pokemonImage = pokemonCard.querySelector('img').src;
-                addToBattleTeam(pokemonName, pokemonImage);
-            };
-        }
-
-        // Add the PokéBall icon
-        let pokeballIcon = pokemonCard.querySelector('.pokeball-icon');
-        if (!pokeballIcon) {
-            pokeballIcon = document.createElement('div');
-            pokeballIcon.classList.add('pokeball-icon');
-            pokeballIcon.innerHTML = `<img src="../img/pokeball.png" alt="Caught Pokémon" style="width: 100%" />`; // Replace with your actual PokéBall image path
-            pokeballIcon.style.position = 'absolute';
-            pokeballIcon.style.top = '10px';
-            pokeballIcon.style.left = '15px';
-            pokeballIcon.style.width = '40px';
-            pokeballIcon.style.height = '40px';
-            pokeballIcon.style.pointerEvents = 'none';
-            pokemonCard.appendChild(pokeballIcon);
-        }
+    
+    if (event.detail.message === 'The Pokémon escaped!') {
+        showPokemonGamePopup("pokemonPopup-game-escape")
     } else {
-        console.warn(`No card found for Pokémon with ID ${pokemonId}`);
+
+        showPokemonGamePopup("pokemonPopup-game-catch")
+
+        // Find the Pokémon card corresponding to the caught Pokémon
+        const pokemonCard = document.querySelector(`.pokemon-card[data-id="${pokemonId}"]`);
+        if (pokemonCard) {
+            // Update the button text
+            const button = pokemonCard.querySelector('button');
+            if (button) {
+                button.textContent = "Add to Team";
+                button.style.backgroundColor = pokemonCard.getAttribute('data-color');
+                button.onmouseover = () => (button.style.backgroundColor = darkenColor(button.style.backgroundColor, 40));
+                button.onmouseout = () => (button.style.backgroundColor = pokemonCard.getAttribute('data-color'));
+                button.onclick = () => {
+                    const pokemonName = pokemonCard.getAttribute('data-name');
+                    const pokemonImage = pokemonCard.querySelector('img').src;
+                    addToBattleTeam(pokemonName, pokemonImage);
+                };
+            }
+
+            // Add the PokéBall icon
+            let pokeballIcon = pokemonCard.querySelector('.pokeball-icon');
+            if (!pokeballIcon) {
+                pokeballIcon = document.createElement('div');
+                pokeballIcon.classList.add('pokeball-icon');
+                pokeballIcon.innerHTML = `<img src="../img/pokeball.png" alt="Caught Pokémon" style="width: 100%" />`; // Replace with your actual PokéBall image path
+                pokeballIcon.style.position = 'absolute';
+                pokeballIcon.style.top = '10px';
+                pokeballIcon.style.left = '15px';
+                pokeballIcon.style.width = '40px';
+                pokeballIcon.style.height = '40px';
+                pokeballIcon.style.pointerEvents = 'none';
+                pokemonCard.appendChild(pokeballIcon);
+            }
+        } else {
+            console.warn(`No card found for Pokémon with ID ${pokemonId}`);
+        }
     }
 });
 
@@ -663,8 +673,32 @@ const handleOverlayClick = () => {
         const overlay = document.querySelector('.overlay');
         overlay.classList.remove('visible');
         overlay.removeEventListener('click', handleOverlayClick);
+        
     }
 };
+
+function showPokemonGamePopup(elementId) {
+    const pokemonPopup = document.getElementById(elementId);
+    pokemonPopup.classList.remove('hidden');
+}
+
+function closePopUp(elementId) {
+    const pokemonPopup = document.getElementById(elementId);
+    if (pokemonPopup) {
+        // Add the closing animation class
+        pokemonPopup.classList.add('closing');
+
+        // Wait for the animation to complete before hiding the popup
+        pokemonPopup.addEventListener(
+            'animationend',
+            () => {
+                pokemonPopup.classList.remove('closing'); // Remove the animation class
+                pokemonPopup.classList.add('hidden'); // Hide the popup
+            },
+            { once: true } // Ensure the event listener runs only once
+        );
+    }
+}
 
 // Add event listeners to all cards
 document.addEventListener('click', (event) => {

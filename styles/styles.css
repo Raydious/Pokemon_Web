@@ -497,6 +497,7 @@ header {
         width: 450px;
         text-align: center;
         background: linear-gradient(to bottom, #f9e08e, #f7d02c);
+        z-index: 5;
         padding: 25px;
         border-radius: 16px;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);

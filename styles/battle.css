@@ -944,7 +944,7 @@ main {
 }
 
 /* Popup Animation */
-@keyframes popupScale {
+@keyframes popupBounce {
     0% {
         transform: scale(0.8);
         opacity: 0;

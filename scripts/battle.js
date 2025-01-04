@@ -183,20 +183,20 @@ function displayGameOverMessage(winner) {
     gameOverOverlay.innerHTML = `
         <div class="game-over-content">
             <h1 class="winner-text ${winner === 'player' ? 'player' : 'opponent'}">
-                ${winner === 'player' ? '🎉 You Win! 🎉' : '💀 You Lose! 💀'}
+                ${winner === 'player' ? '🏆 You Win! 🏆' : '💀 You Lose! 💀'}
             </h1>
             <p class="game-over-text">Game Over</p>
             <div class="scoreboard">
                 <div class="score">
-                    <span class="label">Victories</span>
+                    <span class="label">🎯 Victories</span>
                     <span class="player-victories">${userInfo.victories}</span>
                 </div>
                 <div class="score">
-                    <span class="label">Defeats</span>
+                    <span class="label">🛡️ Defeats</span>
                     <span class="opponent-victories">${userInfo.defeats}</span>
                 </div>
             </div>
-            <button class="restart-button" onClick="location.reload();">Play Again</button>
+            <button class="restart-button" onClick="location.reload();">🔄 Play Again</button>
         </div>
     `;
 

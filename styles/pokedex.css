@@ -593,3 +593,248 @@ main {
 .no-scroll {
     overflow: hidden;
 }
+
+
+/* Pokémon Popup Styles */
+.pokemon-popup-game {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    animation: fadeInOverlay 0.8s forwards;
+}
+
+.pokemon-popup-game.hidden {
+    display: none;
+    visibility: hidden;
+}
+
+.popup-content-game {
+    text-align: center;
+    color: #fff;
+    background: linear-gradient(145deg, #1f1f1f, #292929);
+    padding: 2.5rem;
+    border-radius: 25px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+    animation: popupBounce 0.9s ease-in-out;
+    max-width: 650px;
+    margin: auto;
+}
+
+.popup-content-game h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #ffcb05;
+    text-shadow: 0 0 10px #ffcb05, 0 0 20px #ffcb05;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.popup-message-game {
+    font-size: 1.4rem;
+    line-height: 2;
+    color: #d1d5db;
+    margin-bottom: 2.5rem;
+}
+
+.popup-message-game strong {
+    color: #ffd700;
+    font-weight: bold;
+    text-shadow: 0 0 10px #ffd700;
+}
+
+.popup-message-game .highlight {
+    color: #ffcb05;
+    font-size: 1.5rem;
+    text-shadow: 0 0 15px #ffcb05, 0 0 25px #ffcb05;
+}
+
+
+.restart-button-game {
+    padding: 15px 30px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #000000;
+    background-color: #ffcb05;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, background-color 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+.restart-button-game:hover {
+    transform: scale(1.1);
+    background-color: #ffd738;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.restart-button-game::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.3s ease-out;
+    z-index: -1;
+}
+
+.restart-button-game:hover::after {
+    transform: translate(-50%, -50%) scale(1.5);
+}
+
+/* Popup Animation */
+@keyframes popupBounce {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInOverlay {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Fade Out Animation */
+@keyframes fadeOutOverlay {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Apply Fade Out */
+.pokemon-popup-game.closing {
+    animation: fadeOutOverlay 0.5s forwards;
+}
+
+@keyframes fadeOutInside {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+}
+
+/* Apply Fade Out */
+.pokemon-popup-game.closing .popup-content-game {
+    animation: fadeOutInside 0.5s forwards;
+}
+
+
+
+
+/* Fail Popup Specific Styles */
+.popup-content-game.escape {
+    background: linear-gradient(145deg, #3a3a3a, #2e2e2e);
+    color: #ffffff;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);
+}
+
+.popup-content-game.escape h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #f44336; /* Red text for failure */
+    text-shadow: 0 0 10px #f44336, 0 0 20px #f44336;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    animation: textShake 0.7s ease-in-out infinite alternate;
+}
+
+/* Failure Message Styles */
+.popup-message-game.escape {
+    font-size: 1.4rem;
+    line-height: 2;
+    color: #d1d5db;
+}
+
+.popup-message-game.escape strong {
+    color: #ff6b6b;
+    font-weight: bold;
+    text-shadow: 0 0 10px #ff6b6b;
+}
+
+.popup-message-game.escape .highlight {
+    color: #f44336;
+    font-size: 1.5rem;
+    text-shadow: 0 0 15px #f44336, 0 0 25px #f44336;
+}
+
+/* Try Again Button */
+.restart-button-game.escape {
+    color: #ffffff;
+    background-color: #f44336;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, background-color 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.restart-button-game.escape:hover {
+    transform: scale(1.1);
+    background-color: #d32f2f;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Text Shake Animation for escape */
+@keyframes textShake {
+    0% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-3px);
+    }
+    50% {
+        transform: translateX(3px);
+    }
+    75% {
+        transform: translateX(-3px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.restart-button-game.team-full {
+    padding: 15px 25px;
+    font-size: 1.2rem;
+}

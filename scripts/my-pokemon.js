@@ -127,9 +127,10 @@ function handleDragEnd() {
       ballRect.top < pokemonRect.bottom &&
       ballRect.bottom > pokemonRect.top
     ) {
+
       const myEvent = new CustomEvent('caughtPokemonEvent', { detail: { message: 'Caught the Pokémon', pokemonId: currentPokemon.id } });
       document.dispatchEvent(myEvent);
-      alert("You caught the Pokémon!");
+      //alert("You caught the Pokémon!");
 
       // Store caught Pokémon in local storage
       const caughtPokemon = {
@@ -142,9 +143,11 @@ function handleDragEnd() {
       myPokemons.push(caughtPokemon); // Add the caught Pokémon
       localStorage.setItem('myPokemons', JSON.stringify(myPokemons)); // Update local storage
 
-      fetchPokemonById(); // Load a new Pokémon
+      //fetchPokemonById(); // Load a new Pokémon
     } else {
-      alert("The Pokémon escaped!");
+      const myEvent = new CustomEvent('caughtPokemonEvent', { detail: { message: 'The Pokémon escaped!', pokemonId: currentPokemon.id } });
+      document.dispatchEvent(myEvent);
+      //alert("The Pokémon escaped!");
     }
 
     // Reset PokéBall position

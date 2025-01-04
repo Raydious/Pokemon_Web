@@ -127,6 +127,69 @@
                 </div>
                 
             </div>
+
+            <div id="pokemonPopup-game-catch" class="pokemon-popup-game hidden">
+                <div class="popup-content-game">
+                    <h1>🌟 Awesome Catch! 🌟</h1>
+                    <p class="popup-message-game">
+                        <strong>Way to go, Trainer!</strong><br>
+                        You’ve captured <span class="highlight">a powerful Pokémon</span> for your team.<br>
+                        Your journey is heating up — <span class="highlight">you're unstoppable!</span>
+                    </p>
+                    <button id="catchPokemonsBtn" class="restart-button-game" onclick="closePopUp('pokemonPopup-game-catch')">
+                        Catch More Pokémon! 🔥
+                    </button>
+                </div>
+            </div>
+
+            <div id="pokemonPopup-game-escape" class="pokemon-popup-game hidden">
+                <div class="popup-content-game escape">
+                    <h1>🐾 Oh No! 🐾</h1>
+                    <p class="popup-message-game escape">
+                        <strong>The Pokémon slipped away!</strong><br>
+                        Stay determined — <span class="highlight">your next throw</span> could be the winning one!<br>
+                        A true Trainer never backs down, so <span class="highlight">keep aiming for greatness!</span>
+                    </p>
+                    <button id="tryAgainBtn" class="restart-button-game escape" onclick="closePopUp('pokemonPopup-game-escape')">
+                        Give It Another Shot! 🔄
+                    </button>
+                </div>
+            </div>
+
+            <div id="pokemonPopup-already-added" class="pokemon-popup-game hidden">
+                <div class="popup-content-game">
+                    <h1>⚠️ Hold Up, Trainer! ⚠️</h1>
+                    <p class="popup-message-game">
+                        <strong>This Pokémon is already part of your team!</strong><br>
+                        Your battle squad is looking strong, but it's time to mix it up.<br>
+                        Choose another Pokémon to bring fresh power and <span class="highlight">outsmart your rivals!</span>
+                    </p>
+                    <button id="closeAlreadyAddedBtn" class="restart-button-game" onclick="closePopUp('pokemonPopup-already-added')">
+                        Understood! ✅
+                    </button>
+                </div>
+            </div>
+
+            <div id="pokemonPopup-team-full" class="pokemon-popup-game hidden">
+                <div class="popup-content-game team-full">
+                    <h1>⚡ Team Maxed Out! ⚡</h1>
+                    <p class="popup-message-game team-full">
+                        <strong>Your squad is at its peak!</strong><br>
+                        A battle team can only hold <span class="highlight">5 Pokémon</span>.<br>
+                        To add new Pokémon, replace an existing one and fine-tune your lineup for ultimate victory!
+                    </p>
+                    <div class="button-container">
+                        <button id="closeTeamFullBtn" class="restart-button-game team-full" onclick="closePopUp('pokemonPopup-team-full')">
+                            Got It! 🏆
+                        </button>
+                        <a href="battle.html" style="text-decoration: none;">
+                            <button id="goToBattleBtn" class="restart-button-game team-full escape">
+                                Go to Battle! ⚔️
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <script src="../scripts/pokedex.js"></script>
