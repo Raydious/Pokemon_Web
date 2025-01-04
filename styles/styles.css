@@ -232,6 +232,13 @@ header {
     min-width: calc(60% - 10px);
     height: 350px;
     position: relative;
+    overflow: hidden; /* Ensure the zoom effect stays within the item */
+    border-radius: 8px;
+    transition: transform 0.3s ease; /* Add smooth scaling for the item */
+}
+
+.carousel-item:hover {
+    transform: scale(1.02); /* Slightly enlarge the carousel item on hover */
 }
 
 .carousel-item img {
@@ -240,6 +247,11 @@ header {
     object-fit: cover;
     display: block;
     border-radius: 8px;
+    transition: transform 1s ease; /* Smooth zoom effect */
+}
+
+.carousel-item:hover img {
+    transform: scale(1.1); /* Zoom in the image slightly on hover */
 }
 
 .carousel-overlay {
@@ -654,7 +666,13 @@ header {
     background-color: #333;
     border-radius: 8px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
+    overflow: hidden; /* Ensures the image does not spill out of the container */
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.battle-section .battle-card:hover {
+    transform: scale(1.02); /* Slightly enlarge the card container */
 }
 
 .battle-section .battle-card .battle-card-image {
@@ -662,6 +680,11 @@ header {
     height: 100%;
     object-fit: cover;
     border-radius: 8px;
+    transition: transform 1s ease; /* Smooth image scaling on hover */
+}
+
+.battle-section .battle-card:hover .battle-card-image {
+    transform: scale(1.1); /* Slightly zoom the image when hovering over the card */
 }
 
 .battle-section .battle-card .battle-card-overlay {
@@ -673,12 +696,13 @@ header {
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end; /* Align items at the top of the container */
+    justify-content: flex-end; /* Align items at the bottom of the container */
     align-items: center;
     text-align: center;
     background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
     color: white;
     padding: 20px;
+    pointer-events: none; /* Prevents overlay content from interfering with hover effect */
 }
 
 .battle-section .battle-card .battle-card-title {
