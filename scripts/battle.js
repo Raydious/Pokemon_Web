@@ -1,3 +1,10 @@
+/* 
+ * This JavaScript file handles the battle mechanics between Pokémon.
+ * It includes functions and logic to manage Pokémon stats, moves, 
+ * turn-based actions, and outcomes of battles.
+ */
+
+
 /**  NAVIGATION  **/
 
 // Variable to set the nav is open or not
@@ -74,11 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function updateTurnIndicator() {
-    console.log("myPokemons: ", myPokemons);
-    console.log("myPokemons: ", opponentPokemons);
+    if (checkGameOver()) return;
 
     isPlayerTurn = !isPlayerTurn;
-    console.log(isPlayerTurn ? "Player's turn" : "Opponent's turn");
 
     setTimeout(() => {
         // Display the popup
@@ -98,20 +103,109 @@ function updateTurnIndicator() {
     playerCardsOnGrid = Array.from(document.querySelectorAll('.grid-cell[data-occupied="player"]')).length;
     opponentCardsOnGrid = Array.from(document.querySelectorAll('.grid-cell[data-occupied="opponent"]')).length;
 
-    console.log(`Player cards on the grid: ${playerCardsOnGrid}`);
-    console.log(`Opponent cards on the grid: ${opponentCardsOnGrid}`);
-
     if (!isPlayerTurn) {
         setTimeout(() => {
 
             opponentTurn(opponentCardsOnGrid);
         }, 2500); // Delay to ensure all animations are complete before opponent's turn
+    } else if (isPlayerTurn) {
+        let cardsAvailable = Array.from(document.querySelectorAll('.player-cards .card')).some(card => !card.getAttribute("data-placed")) ? 1 : 0;
+        updateStatusBar(cardsAvailable, playerCardsOnGrid);
     }
 }
 
-// Function to check if the game has ended
-function checkEndGame() {
-    // TODO
+function updateStatusBar(cardsAvailable, attacksRemaining) {
+    if (cardsAvailable != null) document.getElementById('cardsAvailable').textContent = cardsAvailable;
+    document.getElementById('attacksRemaining').textContent = attacksRemaining;
+}
+
+function checkGameOver() {
+    const opponentCards = document.querySelectorAll('.opponent-cards .card');
+    const playerCards = document.querySelectorAll('.player-cards .card');
+
+    // Check if all opponent cards are defeated
+    const allOpponentDefeated = Array.from(opponentCards).every(card => card.classList.contains('defeated'));
+
+    // Check if all player cards are defeated
+    const allPlayerDefeated = Array.from(playerCards).every(card => card.classList.contains('defeated'));
+
+    const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {
+        avatar: '../img/default_img.jpg',
+        name: 'Ash Ketchum',
+        email: 'ash.ketchum@email.com',
+        pokemonFavorite: 'Bulbasaur',
+        victories: 0,
+        defeats: 0
+    };
+
+    if (allOpponentDefeated) {
+
+        // Update the victories count
+        userInfo.victories += 1;
+
+        // Save to local storage
+        localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
+        displayGameOverMessage('player');
+        return true; // Game over
+    }
+
+    if (allPlayerDefeated) {
+
+        // Update the defeats count
+        userInfo.defeats += 1;
+
+        // Save to local storage
+        localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
+        displayGameOverMessage('opponent');
+        return true; // Game over
+    }
+
+    return false; // Game continues
+}
+
+// Display game over message with animation
+function displayGameOverMessage(winner) {
+
+    const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {
+        avatar: '../img/default_img.jpg',
+        name: 'Ash Ketchum',
+        email: 'ash.ketchum@email.com',
+        pokemonFavorite: 'Bulbasaur',
+        victories: 0,
+        defeats: 0
+    };
+
+    const gameOverOverlay = document.createElement('div');
+    gameOverOverlay.className = 'game-over-overlay';
+
+    gameOverOverlay.innerHTML = `
+        <div class="game-over-content">
+            <h1 class="winner-text ${winner === 'player' ? 'player' : 'opponent'}">
+                ${winner === 'player' ? '🎉 You Win! 🎉' : '💀 You Lose! 💀'}
+            </h1>
+            <p class="game-over-text">Game Over</p>
+            <div class="scoreboard">
+                <div class="score">
+                    <span class="label">Victories</span>
+                    <span class="player-victories">${userInfo.victories}</span>
+                </div>
+                <div class="score">
+                    <span class="label">Defeats</span>
+                    <span class="opponent-victories">${userInfo.defeats}</span>
+                </div>
+            </div>
+            <button class="restart-button" onClick="location.reload();">Play Again</button>
+        </div>
+    `;
+
+    document.body.appendChild(gameOverOverlay);
+}
+
+function showPokemonPopup() {
+    const pokemonPopup = document.getElementById('pokemonPopup');
+    pokemonPopup.classList.remove('hidden');
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -119,7 +213,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Check if the array is empty
     if (battleTeam.length === 0 || battleTeam.length < 5) {
-        console.log('Battle team is empty or is not 5 pokemons');
+        showPokemonPopup();
+        
+        // Remove the <main> element
+        const mainElement = document.querySelector('main');
+        if (mainElement) {
+            mainElement.remove();
+        }
         return;
     }
 
@@ -295,351 +395,351 @@ let currentOpponentCardIndex = 0; // Track which opponent card to place
 let originalRotation = '';
 
 cards.forEach(card => {
+    
     let offsetX = 0, offsetY = 0;
     let originalLeft = 0, originalTop = 0;
     let isDragging = false;
     const dragThreshold = 10; // Minimum movement in px to start dragging
 
-    // Common start drag handler for mouse and touch
-    const startDrag = (e) => {
-        e.preventDefault();
+        // Common start drag handler for mouse and touch
+        const startDrag = (e) => {
+            e.preventDefault();
+            if (isPlayerTurn) {
+                
+                const isTouch = e.type === 'touchstart';
+                const startX = isTouch ? e.touches[0].clientX : e.clientX;
+                const startY = isTouch ? e.touches[0].clientY : e.clientY;
 
-        const isTouch = e.type === 'touchstart';
-        const startX = isTouch ? e.touches[0].clientX : e.clientX;
-        const startY = isTouch ? e.touches[0].clientY : e.clientY;
+                // Store the card's original position and rotation
+                const cardRect = card.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+                originalLeft = card.offsetLeft;
+                originalTop = card.offsetTop;
+                originalRotation = card.style.getPropertyValue('--rotation') || '';
 
-        console.log(`Card "${card.textContent.trim()}" selected`);
+                // Calculate offset from the touch/mouse pointer to the card's top-left corner
+                offsetX = startX - cardRect.left;
+                offsetY = startY - cardRect.top;
 
-        // Store the card's original position and rotation
-        const cardRect = card.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        originalLeft = card.offsetLeft;
-        originalTop = card.offsetTop;
-        originalRotation = card.style.getPropertyValue('--rotation') || '';
+                // Enable movement
+                const moveCard = (event) => {
+                    const isTouchMove = event.type === 'touchmove';
+                    const moveX = isTouchMove ? event.touches[0].clientX : event.clientX;
+                    const moveY = isTouchMove ? event.touches[0].clientY : event.clientY;
 
-        console.log(`Original Position: Left=${originalLeft}px, Top=${originalTop}px`);
-        console.log(`Original Rotation: ${originalRotation}`);
+                    // Calculate the distance moved
+                    const deltaX = Math.abs(moveX - startX);
+                    const deltaY = Math.abs(moveY - startY);
 
-        // Calculate offset from the touch/mouse pointer to the card's top-left corner
-        offsetX = startX - cardRect.left;
-        offsetY = startY - cardRect.top;
+                    // Start dragging only if the movement exceeds the threshold
+                    if (!isDragging && (deltaX > dragThreshold || deltaY > dragThreshold)) {
+                        isDragging = true;
+                    }
 
-        console.log(`OffsetX: ${offsetX}, OffsetY: ${offsetY}`);
+                    if (isDragging) {
+                        card.style.removeProperty('--rotation');
+                        card.style.transition = 'none';
 
-        // Enable movement
-        const moveCard = (event) => {
-            const isTouchMove = event.type === 'touchmove';
-            const moveX = isTouchMove ? event.touches[0].clientX : event.clientX;
-            const moveY = isTouchMove ? event.touches[0].clientY : event.clientY;
+                        // Calculate the new position
+                        const mouseX = moveX - containerRect.left;
+                        const mouseY = moveY - containerRect.top;
 
-            // Calculate the distance moved
-            const deltaX = Math.abs(moveX - startX);
-            const deltaY = Math.abs(moveY - startY);
+                        const newLeft = mouseX - offsetX;
+                        const newTop = mouseY - offsetY;
 
-            // Start dragging only if the movement exceeds the threshold
-            if (!isDragging && (deltaX > dragThreshold || deltaY > dragThreshold)) {
-                console.log('Dragging started');
-                isDragging = true;
-            }
+                        card.style.position = 'absolute';
+                        card.style.zIndex = '1000';
+                        card.style.left = `${newLeft}px`;
+                        card.style.top = `${newTop}px`;
+                    }
+                };
 
-            if (isDragging) {
-                card.style.removeProperty('--rotation');
-                card.style.transition = 'none';
+                // Drop the card on mouseup/touchend
+                const dropCard = () => {
+                    event.stopImmediatePropagation();
+                    document.removeEventListener('mousemove', moveCard);
+                    document.removeEventListener('mouseup', dropCard);
+                    document.removeEventListener('touchmove', moveCard);
+                    document.removeEventListener('touchend', dropCard);
 
-                // Calculate the new position
-                const mouseX = moveX - containerRect.left;
-                const mouseY = moveY - containerRect.top;
+                    if (!isDragging) {
+                        card.classList.toggle('active');
+                        return;
+                    }
 
-                const newLeft = mouseX - offsetX;
-                const newTop = mouseY - offsetY;
+                    const cardRect = card.getBoundingClientRect();
 
-                card.style.position = 'absolute';
-                card.style.zIndex = '1000';
-                card.style.left = `${newLeft}px`;
-                card.style.top = `${newTop}px`;
+                    // Re-enable transition after dropping
+                    card.style.transition = '';
+                    document.querySelector('.player-cards').style.zIndex = '4';
 
-                console.log(`Mouse/Touch: X=${mouseX}, Y=${mouseY}`);
-                console.log(`Card Position: Left=${newLeft}px, Top=${newTop}px`);
-            }
-        };
+                    // Check for collision with grid cells
+                    let snapped = false;
+                    let invalidAttack = false;
+                    let validAttack = false;
+                    let cardAlreadyPlaced = false;
+                    let cellOccupied = false;
+                    let playerHasalreadyPlaced = false;
 
-        // Drop the card on mouseup/touchend
-        const dropCard = () => {
-            event.stopImmediatePropagation();
-            document.removeEventListener('mousemove', moveCard);
-            document.removeEventListener('mouseup', dropCard);
-            document.removeEventListener('touchmove', moveCard);
-            document.removeEventListener('touchend', dropCard);
+                    gridCells.forEach((cell, index) => {
+                        const cellRect = cell.getBoundingClientRect();
 
-            if (!isDragging) {
-                console.log('Drag did not start, skipping drop logic');
-                return;
-            }
+                        if (
+                            cardRect.left < cellRect.right &&
+                            cardRect.right > cellRect.left &&
+                            cardRect.top < cellRect.bottom &&
+                            cardRect.bottom > cellRect.top &&
+                            isPlayerTurn
+                        ) {
 
-            console.log(`Dropping Card "${card.textContent.trim()}"`);
-            const cardRect = card.getBoundingClientRect();
+                            const isBottomRow = index >= 3; // Bottom row indices are 3, 4, 5
+                            const isTopRow = index < 3; // Top row indices are 0, 1, 2
 
-            // Re-enable transition after dropping
-            card.style.transition = '';
+                            const isPlayerCard = card.parentElement.classList.contains('player-cards');
 
-            // Check for collision with grid cells
-            let snapped = false;
-            let invalidAttack = false;
-            let validAttack = false;
-            let cardAlreadyPlaced = false;
-            let cellOccupied = false;
-            let playerHasalreadyPlaced = false;
+                            if (isPlayerCard) {
 
-            gridCells.forEach((cell, index) => {
-                const cellRect = cell.getBoundingClientRect();
+                                if (isBottomRow && cardsPlacedThisTurn.size === 0) {
+                                    // Check if the card is already placed in a grid cell
+                                    if (card.getAttribute('data-placed') === 'true') {
+                                        playInvalidActionAnimation(card, `${originalLeft}px`, `${originalTop}px`);
+                                        cardAlreadyPlaced = true;
+                                    }
+                                    else if (cell.getAttribute('data-occupied') === 'player') {
+                                        playInvalidActionAnimation(card, `${originalLeft}px`, `${originalTop}px`);
+                                        cellOccupied = true;
+                                    }
+                                    else {
+                                        // Snap the card to the center of the player's grid cell
+                                        card.style.left = `${cellRect.left - containerRect.left + (cellRect.width - card.offsetWidth) / 2}px`;
+                                        card.style.top = `${cellRect.top - containerRect.top + (cellRect.height - card.offsetHeight) / 2}px`;
+                                        cell.setAttribute('data-occupied', 'player');
+                                        card.setAttribute('data-placed', 'true'); // Mark card as placed
+                                        updateStatusBar(0, playerCardsOnGrid);
+                                        snapped = true;
 
-                console.log(`Checking collision with Cell "${cell.id}"`);
+                                        // Add the placed card to the current turn set
+                                        cardsPlacedThisTurn.add(card);
 
-                if (
-                    cardRect.left < cellRect.right &&
-                    cardRect.right > cellRect.left &&
-                    cardRect.top < cellRect.bottom &&
-                    cardRect.bottom > cellRect.top &&
-                    isPlayerTurn
-                ) {
-                    console.log(`Collision detected with Cell "${cell.id}"`);
-
-                    const isBottomRow = index >= 3; // Bottom row indices are 3, 4, 5
-                    const isTopRow = index < 3; // Top row indices are 0, 1, 2
-
-                    const isPlayerCard = card.parentElement.classList.contains('player-cards');
-
-                    if (isPlayerCard) {
-                        console.log("bob", cardsPlacedThisTurn.size);
-
-                        if (isBottomRow && cardsPlacedThisTurn.size === 0) {
-                            // Check if the card is already placed in a grid cell
-                            if (card.getAttribute('data-placed') === 'true') {
-                                console.log(`Card "${card.textContent.trim()}" is already placed in Cell "${cell.id}" and cannot be moved.`);
-                                playInvalidActionAnimation(card, `${originalLeft}px`, `${originalTop}px`);
-                                cardAlreadyPlaced = true;
-                            }
-                            else if (cell.getAttribute('data-occupied') === 'player') {
-                                console.log(`Cell "${cell.id}" is already occupied by a player card.`);
-                                playInvalidActionAnimation(card, `${originalLeft}px`, `${originalTop}px`);
-                                cellOccupied = true;
-                            }
-                            else {
-                                // Snap the card to the center of the player's grid cell
-                                card.style.left = `${cellRect.left - containerRect.left + (cellRect.width - card.offsetWidth) / 2}px`;
-                                card.style.top = `${cellRect.top - containerRect.top + (cellRect.height - card.offsetHeight) / 2}px`;
-
-                                console.log(`Card "${card.textContent.trim()}" snapped to Cell "${cell.id}"`);
-                                cell.setAttribute('data-occupied', 'player');
-                                card.setAttribute('data-placed', 'true'); // Mark card as placed
-                                snapped = true;
-
-                                // Add the placed card to the current turn set
-                                cardsPlacedThisTurn.add(card);
-
-                                if (playerCardsOnGrid === 0) {
-                                    updateTurnIndicator();
+                                        if (playerCardsOnGrid === 0) {
+                                            updateTurnIndicator();
+                                        }
+                                    }
                                 }
-                            }
-                        }
-                        else if (isBottomRow && cardsPlacedThisTurn.size === 1) {
-                            playInvalidActionAnimation(card, `${originalLeft}px`, `${originalTop}px`);
-                            playerHasalreadyPlaced = true;
-                        }
-                        else if (isTopRow) {
-                            // Check if there's an opponent card in the cell
-                            const opponentCard = opponentCards.find((card, index) => {
-                                const opponentCardRect = card.getBoundingClientRect();
-                                return (
-                                    opponentCardRect.left < cellRect.right &&
-                                    opponentCardRect.right > cellRect.left &&
-                                    opponentCardRect.top < cellRect.bottom &&
-                                    opponentCardRect.bottom > cellRect.top
-                                );
-                            });
+                                else if (isBottomRow && cardsPlacedThisTurn.size === 1) {
+                                    playInvalidActionAnimation(card, `${originalLeft}px`, `${originalTop}px`);
+                                    playerHasalreadyPlaced = true;
+                                }
+                                else if (isTopRow) {
+                                    // Check if there's an opponent card in the cell
+                                    const opponentCard = opponentCards.find((card, index) => {
+                                        const opponentCardRect = card.getBoundingClientRect();
+                                        return (
+                                            opponentCardRect.left < cellRect.right &&
+                                            opponentCardRect.right > cellRect.left &&
+                                            opponentCardRect.top < cellRect.bottom &&
+                                            opponentCardRect.bottom > cellRect.top
+                                        );
+                                    });
 
-                            if (!opponentCard) {
-                                console.log(`Invalid attack attempt to Cell "${cell.id}"`);
-                                invalidAttack = true;
-                                playInvalidActionAnimation(card, `${originalLeft}px`, `${originalTop}px`); // Pass original position
-                            }
-                            if (opponentCard && !cardsPlacedThisTurn.has(card)) {
-                                console.log(`Valid attack on Opponent Card "${opponentCard.textContent.trim()}"`);
-                                validAttack = true;
+                                    if (!opponentCard) {
+                                        invalidAttack = true;
+                                        playInvalidActionAnimation(card, `${originalLeft}px`, `${originalTop}px`); // Pass original position
+                                    }
+                                    if (opponentCard && !cardsPlacedThisTurn.has(card) && card.getAttribute('data-placed') === 'true') {
+                                        validAttack = true;
 
-                                const indexPlayerCard = myPokemons.findIndex(p => p.name === card.getAttribute('data-name'));
-                                const indexOpponentCard = opponentPokemons.findIndex(p => p.name === opponentCard.getAttribute('data-name'));
+                                        const indexPlayerCard = myPokemons.findIndex(p => p.name === card.getAttribute('data-name'));
+                                        const indexOpponentCard = opponentPokemons.findIndex(p => p.name === opponentCard.getAttribute('data-name'));
 
-                                // Play attack animation and reset the player card after it completes
-                                playAttackAnimation(card, opponentCard, () => {
-                                    console.log('Attack sequence completed');
-                                    card.style.left = `${originalLeft}px`;
-                                    card.style.top = `${originalTop}px`;
-                                    card.style.transition = 'all 0.5s ease'; // Smooth transition back
-                                    let dmgToDefense = 0;
-                                    let dmgToHp = 0;
+                                        // Play attack animation and reset the player card after it completes
+                                        playAttackOpponentAnimation(card, opponentCard, () => {
+                                            card.style.left = `${originalLeft}px`;
+                                            card.style.top = `${originalTop}px`;
+                                            card.style.transition = 'all 0.5s ease'; // Smooth transition back
+                                            let dmgToDefense = 0;
+                                            let dmgToHp = 0;
 
-                                    if (opponentPokemons[indexOpponentCard].stats[2].base_stat > 0) {
-                                        opponentPokemons[indexOpponentCard].stats[2].base_stat = opponentPokemons[indexOpponentCard].stats[2].base_stat - myPokemons[indexPlayerCard].stats[1].base_stat;
-                                        dmgToDefense = myPokemons[indexPlayerCard].stats[1].base_stat;
+                                            if (opponentPokemons[indexOpponentCard].stats[2].base_stat > 0) {
+                                                opponentPokemons[indexOpponentCard].stats[2].base_stat = opponentPokemons[indexOpponentCard].stats[2].base_stat - myPokemons[indexPlayerCard].stats[1].base_stat;
+                                                dmgToDefense = myPokemons[indexPlayerCard].stats[1].base_stat;
 
-                                        showDamage(opponentCard, `${dmgToDefense} DEF`, "orange");
+                                                showDamage(opponentCard, `${dmgToDefense} DEF`, "orange");
 
-                                        if (opponentPokemons[indexOpponentCard].stats[2].base_stat < 0) {
-                                            dmgToDefense = myPokemons[indexPlayerCard].stats[1].base_stat - Math.abs(opponentPokemons[indexOpponentCard].stats[2].base_stat);
-                                            dmgToHp = Math.abs(opponentPokemons[indexOpponentCard].stats[2].base_stat);
-                                            opponentPokemons[indexOpponentCard].stats[0].base_stat = opponentPokemons[indexOpponentCard].stats[0].base_stat - dmgToHp;
-                                            opponentPokemons[indexOpponentCard].stats[2].base_stat = 0;
-                                            setTimeout(() => {
-                                                showDamage(opponentCard, `${dmgToHp} HP`, "red");
+                                                if (opponentPokemons[indexOpponentCard].stats[2].base_stat < 0) {
+                                                    dmgToDefense = myPokemons[indexPlayerCard].stats[1].base_stat - Math.abs(opponentPokemons[indexOpponentCard].stats[2].base_stat);
+                                                    dmgToHp = Math.abs(opponentPokemons[indexOpponentCard].stats[2].base_stat);
+                                                    opponentPokemons[indexOpponentCard].stats[0].base_stat = opponentPokemons[indexOpponentCard].stats[0].base_stat - dmgToHp;
+                                                    opponentPokemons[indexOpponentCard].stats[2].base_stat = 0;
+                                                    setTimeout(() => {
+                                                        document.querySelector('.player-cards').style.zIndex = '3';
+                                                        showDamage(opponentCard, `${dmgToHp} HP`, "red");
+                                                        
+                                                        if (opponentPokemons[indexOpponentCard].stats[0].base_stat <= 0) {
+                                                            opponentCard.classList.add('defeated');
+                                                        
+                                                            // Listen for the animation end to remove the card and clean up
+                                                            opponentCard.addEventListener('animationend', () => {
+                                                        
+                                                                // Remove the card from the DOM and opponentPokemons array
+                                                                opponentPokemons.splice(indexOpponentCard, 1);
+                                                                opponentCard.remove();
+                                                                cell.setAttribute('data-occupied', '');
+                                                                opponentCardsOnGrid--;
+
+                                                                if (checkGameOver()) return;
+
+                                                                if (playerCardsOnGrid <= 0 || opponentCardsOnGrid <= 0) {
+                                                                    // Initialize turn indicator
+                                                                    updateTurnIndicator();
+                                                                }
+                                                                    
+                                                            }, { once: true }); // Ensure the listener is only triggered once
+                                                            return;
+                                                        } else { 
+                                                            if (playerCardsOnGrid === 0) {
+                                                                // Initialize turn indicator
+                                                                updateTurnIndicator();
+                                                            }
+                                                        }
+                                                    }, 1000);
+
+
+                                                } else {
+                                                    
+                                                    if (playerCardsOnGrid === 0) {
+                                                        // Initialize turn indicator
+                                                        updateTurnIndicator();
+                                                    }
+                                                }
                                                 
+                                            } else {
+                                                dmgToHp = myPokemons[indexPlayerCard].stats[1].base_stat;
+                                                showDamage(opponentCard, `${dmgToHp} HP`, "red");
+                                                opponentPokemons[indexOpponentCard].stats[0].base_stat = opponentPokemons[indexOpponentCard].stats[0].base_stat - myPokemons[indexPlayerCard].stats[1].base_stat;
+
                                                 if (opponentPokemons[indexOpponentCard].stats[0].base_stat <= 0) {
                                                     opponentCard.classList.add('defeated');
                                                 
                                                     // Listen for the animation end to remove the card and clean up
                                                     opponentCard.addEventListener('animationend', () => {
-                                                        console.log(`Card ${opponentPokemons[indexOpponentCard].name} defeated!`);
                                                 
                                                         // Remove the card from the DOM and opponentPokemons array
                                                         opponentPokemons.splice(indexOpponentCard, 1);
                                                         opponentCard.remove();
                                                         cell.setAttribute('data-occupied', '');
 
+                                                        if (checkGameOver()) return;
+
+                                                        opponentCardsOnGrid--;
+
+                                                        if (playerCardsOnGrid <= 0 || opponentCardsOnGrid <= 0) {
+                                                            // Initialize turn indicator
+                                                            updateTurnIndicator();
+                                                        }
+                                                    }, { once: true }); // Ensure the listener is only triggered once
+                                                }
+                                                else {
+                                                    if (playerCardsOnGrid === 0) {
                                                         // Initialize turn indicator
                                                         updateTurnIndicator();
-                                                            
-                                                    }, { once: true }); // Ensure the listener is only triggered once
-                                                    return;
-                                                } else { 
-                                                    // Initialize turn indicator
-                                                    updateTurnIndicator();
+                                                    }
                                                 }
-                                            }, 1000);
+                                            }
 
+                                            // Extract stats
+                                            const stats = opponentPokemons[indexOpponentCard].stats.reduce((acc, stat) => {
+                                                acc[stat.stat.name] = stat.base_stat;
+                                                return acc;
+                                            }, {});
 
-                                        } else {
-                                            // Initialize turn indicator
-                                            updateTurnIndicator();
-                                        }
-                                        
-                                    } else {
-                                        dmgToHp = myPokemons[indexPlayerCard].stats[1].base_stat;
-                                        showDamage(opponentCard, `${dmgToHp} HP`, "red");
-                                        opponentPokemons[indexOpponentCard].stats[0].base_stat = opponentPokemons[indexOpponentCard].stats[0].base_stat - myPokemons[indexPlayerCard].stats[1].base_stat;
+                                            const pokemonImage =
+                                                opponentPokemons[indexOpponentCard].sprites.other['official-artwork'].front_default ||
+                                                opponentPokemons[indexOpponentCard].sprites.front_default;
 
-                                        if (opponentPokemons[indexOpponentCard].stats[0].base_stat <= 0) {
-                                            opponentCard.classList.add('defeated');
-                                        
-                                            // Listen for the animation end to remove the card and clean up
-                                            opponentCard.addEventListener('animationend', () => {
-                                                console.log(`Card ${opponentPokemons[indexOpponentCard].name} defeated!`);
-                                        
-                                                // Remove the card from the DOM and opponentPokemons array
-                                                opponentPokemons.splice(indexOpponentCard, 1);
-                                                opponentCard.remove();
-                                                cell.setAttribute('data-occupied', '');
+                                            const typeHtml = opponentPokemons[indexOpponentCard].types.map((item) => {
+                                                return `<span style="background-color: ${typeColors[item.type.name]}"}>${item.type.name}</span>`;
+                                            }).join("");
 
-                                                // Initialize turn indicator
-                                                updateTurnIndicator();
-                                            }, { once: true }); // Ensure the listener is only triggered once
-                                            return;
-                                        }
-                                        else {
-                                            // Initialize turn indicator
-                                            updateTurnIndicator();
-                                        }
+                                            opponentCard.innerHTML = `
+                                                <div class="front">
+                                                    <img class="poke-img" src=${pokemonImage} alt="${opponentPokemons[indexOpponentCard].name}" />
+                                                    <h2 class="poke-name">${opponentPokemons[indexOpponentCard].name.charAt(0).toUpperCase() + opponentPokemons[indexOpponentCard].name.slice(1).toLowerCase()}</h2>
+                                                    <p class="hp">
+                                                        <span>HP</span>
+                                                        ${stats.hp}
+                                                    </p>
+                                                </div>
+                                                <div class="back">
+                                                    <div class="types">
+                                                        ${typeHtml}
+                                                    </div>
+                                                    <div class="stats">
+                                                        <div class="col1">
+                                                            <h3>${stats.attack}</h3>
+                                                            <p>Attack</p>
+                                                        </div>
+                                                        <div class="col2">
+                                                            <h3>${stats.defense}</h3>
+                                                            <p>Defense</p>
+                                                        </div>
+                                                        <div class="col3">
+                                                            <h3>${stats.speed}</h3>
+                                                            <p>Speed</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            `;
+                                        });
+
+                                        playerCardsOnGrid--;
+                                        updateStatusBar(null, playerCardsOnGrid);
                                     }
-
-                                    // Extract stats
-                                    const stats = opponentPokemons[indexOpponentCard].stats.reduce((acc, stat) => {
-                                        acc[stat.stat.name] = stat.base_stat;
-                                        return acc;
-                                    }, {});
-
-                                    const pokemonImage =
-                                        opponentPokemons[indexOpponentCard].sprites.other['official-artwork'].front_default ||
-                                        opponentPokemons[indexOpponentCard].sprites.front_default;
-
-                                    const typeHtml = opponentPokemons[indexOpponentCard].types.map((item) => {
-                                        return `<span style="background-color: ${typeColors[item.type.name]}"}>${item.type.name}</span>`;
-                                    }).join("");
-
-                                    opponentCard.innerHTML = `
-                                        <div class="front">
-                                            <img class="poke-img" src=${pokemonImage} alt="${opponentPokemons[indexOpponentCard].name}" />
-                                            <h2 class="poke-name">${opponentPokemons[indexOpponentCard].name.charAt(0).toUpperCase() + opponentPokemons[indexOpponentCard].name.slice(1).toLowerCase()}</h2>
-                                            <p class="hp">
-                                                <span>HP</span>
-                                                ${stats.hp}
-                                            </p>
-                                        </div>
-                                        <div class="back">
-                                            <div class="types">
-                                                ${typeHtml}
-                                            </div>
-                                            <div class="stats">
-                                                <div class="col1">
-                                                    <h3>${stats.attack}</h3>
-                                                    <p>Attack</p>
-                                                </div>
-                                                <div class="col2">
-                                                    <h3>${stats.defense}</h3>
-                                                    <p>Defense</p>
-                                                </div>
-                                                <div class="col3">
-                                                    <h3>${stats.speed}</h3>
-                                                    <p>Speed</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `;
-                                });
-                            }
-                            else {
-                                console.log(`Opponent card already placed in Cell "${cell.id}"`);
-                                playInvalidActionAnimation(card, `${originalLeft}px`, `${originalTop}px`);
-                                cardAlreadyPlaced = true;
+                                    else {
+                                        playInvalidActionAnimation(card, `${originalLeft}px`, `${originalTop}px`);
+                                        cardAlreadyPlaced = true;
+                                    }
+                                }
                             }
                         }
+                    });
+
+                    if (!snapped && !invalidAttack && !validAttack && !cardAlreadyPlaced && !cellOccupied && !playerHasalreadyPlaced) {
+
+                        // Return the card to its original position and rotation
+                        card.style.left = `${originalLeft}px`;
+                        card.style.top = `${originalTop}px`;
+                        card.style.setProperty('--rotation', originalRotation);
                     }
-                }
-            });
 
-            if (!snapped && !invalidAttack && !validAttack && !cardAlreadyPlaced && !cellOccupied && !playerHasalreadyPlaced) {
-                console.log(`Card "${card.textContent.trim()}" not dropped on any valid cell. Returning to original position.`);
+                    // Reset zIndex
+                    if (!snapped && !invalidAttack && !validAttack && !cardAlreadyPlaced && !cellOccupied) {
+                        card.style.zIndex = '0';
+                    }
+                    else {
+                        setTimeout(() => {
+                            card.style.zIndex = '0';
+                        }, 1000);
+                    }
+                    isDragging = false; // Reset dragging state
+                };
 
-                // Return the card to its original position and rotation
-                card.style.left = `${originalLeft}px`;
-                card.style.top = `${originalTop}px`;
-                card.style.setProperty('--rotation', originalRotation);
-            }
+                // Add event listeners for movement and drop
+                document.addEventListener('mousemove', moveCard);
+                document.addEventListener('mouseup', dropCard);
+                document.addEventListener('touchmove', moveCard);
+                document.addEventListener('touchend', dropCard);
+            };
+        }
 
-            // Reset zIndex
-            if (!snapped && !invalidAttack && !validAttack && !cardAlreadyPlaced && !cellOccupied) {
-                card.style.zIndex = '0';
-            }
-            else {
-                setTimeout(() => {
-                    card.style.zIndex = '0';
-                }, 1000);
-            }
-            isDragging = false; // Reset dragging state
-        };
+        // Add both mouse and touch event listeners
+        card.addEventListener('mousedown', startDrag);
+        card.addEventListener('touchstart', startDrag);
+        card.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            displayGameOverMessage('player');
+        });
 
-        // Add event listeners for movement and drop
-        document.addEventListener('mousemove', moveCard);
-        document.addEventListener('mouseup', dropCard);
-        document.addEventListener('touchmove', moveCard);
-        document.addEventListener('touchend', dropCard);
-    };
-
-    // Add both mouse and touch event listeners
-    card.addEventListener('mousedown', startDrag);
-    card.addEventListener('touchstart', startDrag);
-    card.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        card.classList.toggle('active');
-    });
 });
 
 // Function to display damage
@@ -673,7 +773,6 @@ function playInvalidActionAnimation(card, originalLeft, originalTop) {
     // Wait for the wiggle animation to complete
     setTimeout(() => {
         card.style.animation = ''; // Remove animation
-        console.log('Invalid action animation completed');
 
         // Restore card to its original position
         card.style.transition = 'all 0.5s ease'; // Smooth transition back
@@ -683,7 +782,7 @@ function playInvalidActionAnimation(card, originalLeft, originalTop) {
     }, 500); // Match the duration of the wiggle animation
 }
 
-function playAttackAnimation(playerCard, opponentCard, callback) {
+function playAttackOpponentAnimation(playerCard, opponentCard, callback) {
     // Clear any ongoing animation to reapply it
     playerCard.style.animation = 'none';
 
@@ -691,6 +790,8 @@ function playAttackAnimation(playerCard, opponentCard, callback) {
     setTimeout(() => {
         // Apply attack animation to the player's card
         playerCard.style.animation = 'attack 0.6s ease';
+        playerCard.style.zIndex = '9999';
+        document.querySelector('.player-cards').style.zIndex = '4';
 
         // Delay applying the hit animation to the opponent card until the player's card reaches it
         setTimeout(() => {
@@ -699,8 +800,36 @@ function playAttackAnimation(playerCard, opponentCard, callback) {
             // Remove the hit animation after it completes
             setTimeout(() => {
                 opponentCard.style.animation = ''; // Reset opponent card animation
-                console.log('Opponent hit animation completed');
+                playerCard.style.zIndex = '3';
+                document.querySelector('.player-cards').style.zIndex = '3';
 
+            }, 1000); // Match the duration of the hit animation
+            // Execute the callback after all animations are done
+            if (callback) callback();
+        }, 500); // Trigger hit animation halfway through the player's attack animation
+    }, 50); // Slight delay to ensure "none" state is applied
+}
+
+function playAttackPlayerAnimation(playerCard, opponentCard, callback) {
+    // Clear any ongoing animation to reapply it
+    playerCard.style.animation = 'none';
+
+    // Delay to allow the "none" state to register
+    setTimeout(() => {
+        // Apply attack animation to the player's card
+        playerCard.style.animation = 'attack 0.6s ease';
+        playerCard.style.zIndex = '9999';
+        document.querySelector('.opponent-cards').style.zIndex = '4';
+
+        // Delay applying the hit animation to the opponent card until the player's card reaches it
+        setTimeout(() => {
+            opponentCard.style.animation = 'hit 1s ease';
+
+            // Remove the hit animation after it completes
+            setTimeout(() => {
+                opponentCard.style.animation = ''; // Reset opponent card animation
+                playerCard.style.zIndex = '2';
+                document.querySelector('.opponent-cards').style.zIndex = '2';
 
             }, 1000); // Match the duration of the hit animation
             // Execute the callback after all animations are done
@@ -710,7 +839,6 @@ function playAttackAnimation(playerCard, opponentCard, callback) {
 }
 
 function opponentTurn(numberOfAttacks) {
-    checkEndGame();
 
     // Trigger opponent card placement
     placeOpponentCard();
@@ -727,8 +855,6 @@ function opponentTurn(numberOfAttacks) {
 }
 
 function opponentAttack(numberOfAttacks) {
-    console.log("cardsPlacedThisTurn: ", cardsPlacedThisTurn);
-    console.log("numberOfAttacks: ", numberOfAttacks);
 
     const opponentCells = Array.from(document.querySelectorAll('.grid-cell[data-occupied="opponent"]')); // Opponent's cells
     const playerCells = Array.from(document.querySelectorAll('.grid-cell[data-occupied="player"]')); // Player's cells
@@ -750,15 +876,20 @@ function opponentAttack(numberOfAttacks) {
     // Shuffle placed opponent cards for randomness
     const shuffledOpponentCards = placedOpponentCards.sort(() => Math.random() - 0.5);
 
-    // Randomize the order of player cells for random target selection
-    const shuffledPlayerCells = playerCells.sort(() => Math.random() - 0.5);
-
     // Perform attacks
     for (let i = 0; i < numberOfAttacks; i++) {
         setTimeout(() => {
+            if (checkGameOver()) return;
+            
             const attackerCard = shuffledOpponentCards[i];
 
             if (attackerCard) {
+
+                const playerCells = Array.from(document.querySelectorAll('.grid-cell[data-occupied="player"]'));
+
+                // Randomize the order of player cells for random target selection
+                const shuffledPlayerCells = playerCells.sort(() => Math.random() - 0.5);
+                
                 // Randomly select a target player card for each attack
                 const targetCell = shuffledPlayerCells[Math.floor(Math.random() * shuffledPlayerCells.length)];
                 const targetCard = Array.from(document.querySelectorAll('.player-cards .card')).find(card => {
@@ -772,12 +903,7 @@ function opponentAttack(numberOfAttacks) {
                     );
                 });
 
-                console.log("targetCell: ", targetCell);
-                console.log("targetCard: ", targetCard);
-
-
                 if (targetCard) {
-                    console.log(`Opponent card "${attackerCard.textContent.trim()}" attacking Player card "${targetCard.textContent.trim()}"`);
                     simulateAttack(attackerCard, targetCard, targetCell);
                 }
             }
@@ -787,7 +913,6 @@ function opponentAttack(numberOfAttacks) {
     // Clear cards placed this turn after all attacks
     setTimeout(() => {
         cardsPlacedThisTurn.clear();
-        console.log("cardsPlacedThisTurn cleared: ", cardsPlacedThisTurn);
     }, numberOfAttacks * 3000);
 }
 
@@ -809,11 +934,11 @@ function simulateAttack(attackerCard, targetCard, targetCell) {
     attackerCard.style.transition = 'all 0.6s ease';
     attackerCard.style.left = `${targetLeft}px`;
     attackerCard.style.top = `${targetTop}px`;
+    document.querySelector('.opponent-cards').style.zIndex = `4`;
 
     setTimeout(() => {
         // Play attack animation
-        playAttackAnimation(attackerCard, targetCard, () => {
-            console.log('Attack sequence completed');
+        playAttackPlayerAnimation(attackerCard, targetCard, () => {
 
             // Reset attacker card to its original position
             attackerCard.style.left = `${originalLeft}px`;
@@ -835,6 +960,7 @@ function simulateAttack(attackerCard, targetCard, targetCell) {
                     myPokemons[indexPlayerCard].stats[0].base_stat = myPokemons[indexPlayerCard].stats[0].base_stat - dmgToHp;
                     myPokemons[indexPlayerCard].stats[2].base_stat = 0;
                     setTimeout(() => {
+                        document.querySelector('.opponent-cards').style.zIndex = `2`;
                         showDamage(targetCard, `${dmgToHp} HP`, "red");
 
                         if (myPokemons[indexPlayerCard].stats[0].base_stat <= 0) {
@@ -842,7 +968,6 @@ function simulateAttack(attackerCard, targetCard, targetCell) {
                         
                             // Listen for the animation end to remove the card and clean up
                             targetCard.addEventListener('animationend', () => {
-                                console.log(`Card ${myPokemons[indexPlayerCard].name} defeated!`);
                         
                                 // Remove the card from the DOM and opponentPokemons array
                                 myPokemons.splice(indexPlayerCard, 1);
@@ -864,7 +989,6 @@ function simulateAttack(attackerCard, targetCard, targetCell) {
                 
                     // Listen for the animation end to remove the card and clean up
                     targetCard.addEventListener('animationend', () => {
-                        console.log(`Card ${myPokemons[indexPlayerCard].name} defeated!`);
                 
                         // Remove the card from the DOM and opponentPokemons array
                         myPokemons.splice(indexPlayerCard, 1);
@@ -968,8 +1092,6 @@ function simulateDrag(card, targetCell) {
             // Ensure final alignment
             card.style.left = `${targetLeft}px`;
             card.style.top = `${targetTop}px`;
-
-            console.log(`Opponent card "${card.textContent.trim()}" placed at target cell`);
         }
     }, stepTime);
 }
@@ -1002,7 +1124,6 @@ function placeOpponentCard() {
         const opponentCard = opponentCards[currentOpponentCardIndex];
 
         if (opponentCard) {
-            console.log(`Simulating drag for opponent card "${opponentCard.textContent.trim()}" to Cell "${targetCell.id}"`);
 
             // Simulate dragging the card to the target cell
             simulateDrag(opponentCard, targetCell);
@@ -1014,8 +1135,6 @@ function placeOpponentCard() {
             // Add the placed card to the current turn set
             cardsPlacedThisTurn.add(opponentCard);
         }
-    } else {
-        console.log("No available cells for opponent card placement.");
     }
 }
 

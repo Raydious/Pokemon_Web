@@ -1,4 +1,9 @@
-/* Ficheiro de estilos para a pagina de battles */
+/*
+ * This CSS file contains styles for the battle page.
+ * It includes responsive design rules to ensure proper display on different screen sizes,
+ * styles for the main layout, and specific elements such as the game-over content.
+ * The file ensures a consistent look and feel across various devices.
+ */
 
 
 @media (max-width: 768px) {
@@ -14,6 +19,14 @@
     main {
         padding: 0px !important;
     }
+
+    .game-over-content {
+        max-width: 100% !important;
+    }
+}
+
+html {
+    overflow: hidden;
 }
 
 body {
@@ -25,8 +38,10 @@ body {
     flex-direction: column;
     height: 100vh;
     justify-content: space-between;
-    overflow: hidden; /* Prevent scrollbars from appearing */
-    position: relative; /* Ensure background layers align properly */
+    overflow: hidden;
+    /* Prevent scrollbars from appearing */
+    position: relative;
+    /* Ensure background layers align properly */
 }
 
 /* Cool animated background container */
@@ -36,20 +51,36 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 0; /* Place behind content */
+    z-index: 0;
+    /* Place behind content */
     background: linear-gradient(135deg, #4facfe, #00f2fe, #43e97b, #f8ff00);
     background-size: 400% 400%;
     animation: gradientBackground 15s ease infinite;
-    pointer-events: none; /* Prevent interaction with the background */
+    pointer-events: none;
+    /* Prevent interaction with the background */
 }
 
 /* Gradient animation */
 @keyframes gradientBackground {
-    0% { background-position: 0% 50%; }
-    25% { background-position: 50% 50%; }
-    50% { background-position: 100% 50%; }
-    75% { background-position: 50% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    25% {
+        background-position: 50% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    75% {
+        background-position: 50% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 /* Star styling */
@@ -59,15 +90,26 @@ body {
     height: 4px;
     background-color: white;
     border-radius: 50%;
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.8); /* Glow effect */
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+    /* Glow effect */
     animation: twinkle 3s infinite ease-in-out;
-    z-index: 1; /* Above the gradient */
+    z-index: 1;
+    /* Above the gradient */
 }
 
 /* Twinkle effect */
 @keyframes twinkle {
-    0%, 100% { opacity: 0.5; transform: scale(0.9); }
-    50% { opacity: 1; transform: scale(1.1); }
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: scale(0.9);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
 }
 
 /* Overlay effects */
@@ -77,15 +119,21 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 2; /* Slightly above gradient but below content */
+    z-index: 2;
+    /* Slightly above gradient but below content */
     pointer-events: none;
     background: radial-gradient(circle, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 70%);
     animation: overlayRotate 20s linear infinite;
 }
 
 @keyframes overlayRotate {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 
@@ -264,7 +312,7 @@ main {
     }
 }
 
-.card.card-scaled{
+.card.card-scaled {
     transform: rotate(var(--rotation)) translateX(var(--offsetX)) scale(1);
 }
 
@@ -282,7 +330,6 @@ main {
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
     padding: 15px;
     position: relative;
-    overflow: hidden;
     justify-content: center;
     align-items: center;
     transform: scale(0);
@@ -379,24 +426,28 @@ main {
     20% {
         transform: translate(-30px, -30px) scale(0.9);
         opacity: 0.8;
-        box-shadow: 0 0 10px 5px rgba(255, 0, 0, 0.5); /* Red glow */
+        box-shadow: 0 0 10px 5px rgba(255, 0, 0, 0.5);
+        /* Red glow */
     }
 
     40% {
         transform: translate(5px, 5px) scale(1.1);
         opacity: 1;
-        box-shadow: 0 0 15px 7px rgba(255, 0, 0, 0.7); /* Stronger red glow */
+        box-shadow: 0 0 15px 7px rgba(255, 0, 0, 0.7);
+        /* Stronger red glow */
     }
 
     60% {
         transform: translate(-10px, -10px) scale(1.05);
-        box-shadow: 0 0 10px 5px rgba(255, 0, 0, 0.5); /* Return to soft red glow */
+        box-shadow: 0 0 10px 5px rgba(255, 0, 0, 0.5);
+        /* Return to soft red glow */
     }
 
     100% {
         transform: translate(0, 0) scale(1);
         opacity: 1;
-        box-shadow: none; /* Restore original state */
+        box-shadow: none;
+        /* Restore original state */
     }
 }
 
@@ -404,6 +455,7 @@ main {
     0% {
         transform: rotate(var(--rotation)) translateX(var(--offsetX)) scale(0);
     }
+
     100% {
         transform: rotate(var(--rotation)) translateX(var(--offsetX)) scale(1);
     }
@@ -414,6 +466,7 @@ main {
         transform: scale(0);
         opacity: 0;
     }
+
     100% {
         transform: scale(1);
         opacity: 1;
@@ -427,46 +480,68 @@ main {
 .turn-popup {
     position: fixed;
     top: 50%;
-    left: -50%; /* Start off-screen */
-    transform: translate(-50%, -50%) scale(0.5); /* Start small */
-    background: linear-gradient(135deg, #4caf50, #1e88e5); /* Cool gradient */
+    left: -50%;
+    /* Start off-screen */
+    transform: translate(-50%, -50%) scale(0.5);
+    /* Start small */
+    background: linear-gradient(135deg, #4caf50, #1e88e5);
+    /* Cool gradient */
     color: #fff;
-    padding: 30px 60px; /* Bigger padding */
-    border-radius: 12px; /* Softer corners */
-    font-size: 36px; /* Bigger text */
+    padding: 30px 60px;
+    /* Bigger padding */
+    border-radius: 12px;
+    /* Softer corners */
+    font-size: 36px;
+    /* Bigger text */
     font-weight: bold;
     text-align: center;
     text-transform: uppercase;
-    letter-spacing: 3px; /* Spaced letters */
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5); /* Glowing effect */
+    letter-spacing: 3px;
+    /* Spaced letters */
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    /* Glowing effect */
     opacity: 0;
     z-index: 1000;
-    pointer-events: none; /* Ensure it doesn't block interaction */
+    pointer-events: none;
+    /* Ensure it doesn't block interaction */
     width: 400px;
 }
 
 /* Keyframe for the popup animation */
 @keyframes turnPopupAnimation {
     0% {
-        left: 0%; /* Start off-screen */
+        left: 0%;
+        /* Start off-screen */
         opacity: 0;
-        transform: translate(-50%, -50%) scale(0) rotate(-10deg); /* Start small with rotation */
+        transform: translate(-50%, -50%) scale(0) rotate(-10deg);
+        /* Start small with rotation */
     }
+
     25% {
-        opacity: 1; /* Fully visible */
+        opacity: 1;
+        /* Fully visible */
     }
+
     50% {
-        left: 50%; /* Move quickly to mid-left */
-        opacity: 1; /* Fully visible */
-        transform: translate(-50%, -50%) scale(1.5) rotate(0deg); /* Scale up */
+        left: 50%;
+        /* Move quickly to mid-left */
+        opacity: 1;
+        /* Fully visible */
+        transform: translate(-50%, -50%) scale(1.5) rotate(0deg);
+        /* Scale up */
     }
+
     75% {
-        opacity: 1; /* Fully visible */
+        opacity: 1;
+        /* Fully visible */
     }
+
     100% {
-        left: 100%; /* End off-screen */
+        left: 100%;
+        /* End off-screen */
         opacity: 0;
-        transform: translate(-50%, -50%) scale(0) rotate(10deg); /* Scale down with rotation */
+        transform: translate(-50%, -50%) scale(0) rotate(10deg);
+        /* Scale down with rotation */
     }
 }
 
@@ -489,10 +564,12 @@ main {
         transform: translateY(0) scale(1);
         opacity: 1;
     }
+
     50% {
         transform: translateY(-20px) scale(1.1);
         opacity: 0.8;
     }
+
     100% {
         transform: translateY(-40px) scale(0.9);
         opacity: 0;
@@ -504,10 +581,12 @@ main {
         transform: scale(1) rotate(0deg);
         opacity: 1;
     }
+
     50% {
         transform: scale(1.2) rotate(15deg);
         opacity: 0.5;
     }
+
     100% {
         transform: scale(0) rotate(-30deg);
         opacity: 0;
@@ -516,4 +595,366 @@ main {
 
 .card.defeated {
     animation: defeatedAnimation 1s ease-out forwards;
+}
+
+
+/* Game Over Overlay */
+.game-over-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.85) 40%, rgba(0, 0, 0, 0.95) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeInOverlay 1s forwards;
+    overflow: hidden;
+    animation: fadeInOverlay 1s forwards;
+}
+
+/* Add subtle animated background */
+.game-over-overlay::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 0, 150, 0.3), rgba(0, 150, 255, 0.3));
+    mix-blend-mode: overlay;
+    animation: backgroundShift 5s infinite alternate;
+    z-index: 0;
+}
+
+/* Game Over Content */
+.game-over-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: #ffffff;
+    animation: scaleInCool 1s ease-in-out;
+    padding: 2rem;
+    background: linear-gradient(145deg, #1f1f1f, #292929);
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    max-width: 600px;
+    overflow: hidden;
+    animation: scaleInCool 1s ease-in-out;
+}
+
+/* Winner Text */
+.winner-text {
+    font-size: 4rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.winner-text.player {
+    color: #ffcb05;
+    text-shadow: 0 0 20px #ffcb05, 0 0 40px #ffcb05;
+    animation: textGlowPlayer 2s infinite;
+}
+
+.winner-text.opponent {
+    color: #ff0000;
+    text-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000;
+    animation: textGlowOpponent 2s infinite;
+}
+
+/* Game Over Text */
+.game-over-text {
+    font-size: 1.5rem;
+    color: #e0e0e0;
+    margin-bottom: 2rem;
+    letter-spacing: 1px;
+    animation: textPulse 2s infinite alternate;
+}
+
+/* Scoreboard */
+.scoreboard {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-around;
+    gap: 1.5rem;
+    z-index: 1;
+}
+
+.score {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border: 2px solid transparent;
+    animation: glowingBorder 2s infinite alternate;
+}
+
+.score .label {
+    font-size: 1.5rem;
+    color: #ffcb05;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.player-victories {
+    font-size: 2rem;
+    color: #4caf50; /* Green for victories */
+    font-weight: bold;
+    animation: scorePulse 2s infinite;
+}
+
+.opponent-victories {
+    font-size: 2rem;
+    color: #f44336; /* Red for defeats */
+    font-weight: bold;
+    animation: scorePulse 2s infinite;
+}
+
+/* Restart Button */
+.restart-button {
+    padding: 15px 30px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #000000;
+    background-color: #ffcb05;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, background-color 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+.restart-button:hover {
+    transform: scale(1.1);
+    background-color: #ffd738;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.restart-button::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.3s ease-out;
+    z-index: -1;
+}
+
+.restart-button:hover::after {
+    transform: translate(-50%, -50%) scale(1.5);
+}
+
+/* Animations */
+@keyframes fadeInOverlay {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleInCool {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes backgroundShift {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(-10px, -10px);
+    }
+}
+
+@keyframes glowingBorder {
+    from {
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+    to {
+        border-color: rgba(255, 255, 255, 0.8);
+    }
+}
+
+@keyframes textPulse {
+    from {
+        opacity: 0.8;
+        transform: scale(1);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+}
+
+@keyframes textGlowPlayer {
+    0%, 100% {
+        text-shadow: 0 0 20px #ffcb05, 0 0 40px #ffcb05;
+    }
+    50% {
+        text-shadow: 0 0 40px #ffcb05, 0 0 60px #ffcb05;
+    }
+}
+
+@keyframes textGlowOpponent {
+    0%, 100% {
+        text-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000;
+    }
+    50% {
+        text-shadow: 0 0 40px #ff0000, 0 0 60px #ff0000;
+    }
+}
+
+@keyframes scorePulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+
+/* Status Bar */
+.status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #ffffff;
+    font-size: 12px;
+    width: 100%;
+    grid-column-start: 1;
+    grid-column-end: 4;
+}
+
+.status-left,
+.status-right {
+    font-weight: bold;
+}
+
+
+
+/* Pokémon Popup Styles */
+.pokemon-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    animation: fadeInOverlay 0.8s forwards;
+}
+
+.pokemon-popup.hidden {
+    display: none;
+    visibility: hidden;
+}
+
+.popup-content {
+    text-align: center;
+    color: #fff;
+    background: linear-gradient(145deg, #1f1f1f, #292929);
+    padding: 2.5rem;
+    border-radius: 25px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+    animation: popupBounce 0.9s ease-in-out;
+    max-width: 600px;
+    margin: auto;
+}
+
+.popup-content h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #ffcb05;
+    text-shadow: 0 0 10px #ffcb05, 0 0 20px #ffcb05;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.popup-message {
+    font-size: 1.4rem;
+    line-height: 2;
+    color: #d1d5db;
+    margin-bottom: 2.5rem;
+}
+
+.popup-message strong {
+    color: #ffd700;
+    font-weight: bold;
+    text-shadow: 0 0 10px #ffd700;
+}
+
+.popup-message .highlight {
+    color: #ffcb05;
+    font-size: 1.5rem;
+    text-shadow: 0 0 15px #ffcb05, 0 0 25px #ffcb05;
+}
+
+
+.catch-button {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #ff0000;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, background-color 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.catch-button:hover {
+    transform: scale(1.1);
+    background-color: #cc0000;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Popup Animation */
+@keyframes popupScale {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }

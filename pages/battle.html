@@ -1,7 +1,9 @@
-<!-- Este ficheiro é onde se faz as batalhas de pokemons,
-     5 random pokemons vs 5 my pokemons.
-     Os my pokemons vem da pokedex, onde o utilizador tem que os apanhar
-     e adicionar a equipa -->
+<!-- 
+  This HTML file is where Pokémon battles take place.
+  It features 5 random Pokémon versus 5 of the user's Pokémon.
+  The user's Pokémon come from the Pokédex, where the user must catch and add them to their team.
+  The file includes links to the necessary CSS stylesheets and JavaScript files to handle the battle mechanics.
+-->
 
 
 <!DOCTYPE html>
@@ -10,6 +12,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Pokédex</title>
+        <link rel="icon" href="../img/pokeball.png">
         <link
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
             rel="stylesheet">
@@ -60,6 +63,12 @@
                 <div class="grid-cell" id="cell-4"></div>
                 <div class="grid-cell" id="cell-5"></div>
                 <div class="grid-cell" id="cell-6"></div>
+
+                <!-- Status Bar -->
+                <div class="status-bar">
+                    <span class="status-left">Cards available to play: <span id="cardsAvailable">1</span></span>
+                    <span class="status-right">Attacks remaining: <span id="attacksRemaining">0</span></span>
+                </div>
             </section>
         
             <!-- Player's cards -->
@@ -70,7 +79,21 @@
                 <div class="card" id="player-card-4" data-name="" style="--rotation: 8deg; --offsetX: 80px;">Player Card 4</div>
                 <div class="card" id="player-card-5" data-name="" style="--rotation: 16deg; --offsetX: 160px;">Player Card 5</div>
             </section>
+
         </main>
+
+        <div id="pokemonPopup" class="pokemon-popup hidden">
+            <div class="popup-content">
+                <h1>🚨 Trainer Alert! 🚨</h1>
+                <p class="popup-message">
+                    <strong>Your Pokémon team is incomplete!</strong><br>
+                    Assemble a full squad of <span class="highlight">5 Pokémon</span> to battle.<br>
+                    Don't leave your team hanging — <span class="highlight">go catch 'em all!</span>
+                </p>
+                <a href="pokedex.html" style="text-decoration: none;"><button id="catchPokemonsBtn" class="restart-button">Catch Pokémon Now! 🎯</button></a>
+            </div>
+        </div>
+
         <div class="animated-background"></div>
         <div class="overlay"></div>
         <div class="stars-container"></div>

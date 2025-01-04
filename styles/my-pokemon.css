@@ -1,4 +1,9 @@
-/* Ficheiro de estilos para a subpagina de catch pokemon */
+/*
+ * This CSS file contains styles for the "My Pokémon" page.
+ * It includes layout rules for the header and game area, ensuring a visually appealing design.
+ * The file defines styles for the game area, including a gradient background and shadow effects to enhance visuals.
+ * Additionally, it includes styles for dynamic elements such as clouds in the background.
+ */
 
 
 header>div:nth-child(2) {

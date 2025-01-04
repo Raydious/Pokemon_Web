@@ -1,3 +1,11 @@
+/*
+ * This JavaScript file manages the functionality of the homepage carousel.
+ * It includes logic for initializing the carousel, handling slide transitions,
+ * creating interactive navigation dots, and ensuring seamless looping of slides.
+ * The carousel is animated and allows users to navigate through slides by clicking on the dots.
+ */
+
+
 document.addEventListener("DOMContentLoaded", () => {
     const carouselInner = document.querySelector('.carousel-inner');
     const slides = [...document.querySelectorAll('.carousel-item')];

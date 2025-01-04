@@ -1,3 +1,11 @@
+/*
+ * This JavaScript file manages the functionality of displaying a Pokémon in the game area.
+ * It includes logic for fetching Pokémon data from an API, setting the Pokémon sprite,
+ * and randomizing its position within a defined spawn area.
+ * The file also handles storing the current Pokémon details for further interactions.
+ */
+
+
 const gameArea = document.getElementById("gameArea");
 const pokemon = document.getElementById("pokemon");
 const pokeball = document.getElementById("pokeball");

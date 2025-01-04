@@ -1,3 +1,12 @@
+/*
+ * This JavaScript file manages the functionality of the Pokédex.
+ * It includes logic for saving user information, validating input fields,
+ * handling profile images, and updating the user interface accordingly.
+ * The file ensures that user data such as name, email, and favorite Pokémon
+ * are properly validated and stored.
+ */
+
+
 // Map of Pokémon types to background colors
 const typeColors = {
     normal: '#A8A77A',
@@ -388,10 +397,10 @@ function renderUserInfo() {
             ? userInfo.pokemonFavorite : 'Bulbasaur';
     document.querySelector('#victories').textContent =
         userInfo.victories !== undefined && userInfo.victories !== null
-            ? userInfo.victories : '0';
-    document.querySelector('#victories').textContent =
-        userInfo.victories !== undefined && userInfo.victories !== null
-            ? userInfo.victories : '0';
+            ? userInfo.victories : 0;
+    document.querySelector('#defeats').textContent =
+        userInfo.defeats !== undefined && userInfo.defeats !== null
+            ? userInfo.defeats : 0;
 }
 
 // Open the popup
@@ -440,6 +449,9 @@ function saveUserInfo() {
     if (!name) {
         document.getElementById('error').textContent = 'Name is required.';
         return;
+    } else if (name.length < 3) {
+        document.getElementById('error').textContent = 'Name must be at least 3 characters long.';
+        return;
     }
 
     // Validate email
@@ -450,11 +462,17 @@ function saveUserInfo() {
     } else if (!validateEmail(email)) {
         document.getElementById('error').textContent = 'Invalid email format.';
         return;
+    } else if (email.length < 5) {
+        document.getElementById('error').textContent = 'Email must be at least 5 characters long.';
+        return;
     }
 
     // Validate Pokémon favorite
     if (!pokemonFavorite) {
         document.getElementById('error').textContent = 'Favorite Pokémon is required.';
+        return;
+    } else if (pokemonFavorite.length < 3) {
+        document.getElementById('error').textContent = 'Favorite Pokémon must be at least 3 characters long.';
         return;
     }
 

@@ -1,4 +1,9 @@
-/* Ficheiro de estilos globais, para todas as paginas */
+/*
+ * This CSS file contains global styles for all pages.
+ * It includes base styles for elements such as padding, margin, and font settings.
+ * The file also defines styles for the body, ensuring a consistent background color and layout.
+ * Additionally, it contains styles for the header, including its background color, text color, and layout properties.
+ */
 
 
 * {
