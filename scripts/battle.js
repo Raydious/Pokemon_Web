@@ -84,6 +84,7 @@ function updateTurnIndicator() {
     if (checkGameOver()) return;
 
     isPlayerTurn = !isPlayerTurn;
+    lastPokemonAttacked = null;
 
     setTimeout(() => {
         // Display the popup
@@ -99,8 +100,7 @@ function updateTurnIndicator() {
 
     }, 500);
 
-    // Check how many player and opponent cards are on the grid
-    playerCardsOnGrid = Array.from(document.querySelectorAll('.grid-cell[data-occupied="player"]')).length;
+    // Check how many opponent cards are on the grid
     opponentCardsOnGrid = Array.from(document.querySelectorAll('.grid-cell[data-occupied="opponent"]')).length;
 
     if (!isPlayerTurn) {
@@ -109,8 +109,14 @@ function updateTurnIndicator() {
             opponentTurn(opponentCardsOnGrid);
         }, 2500); // Delay to ensure all animations are complete before opponent's turn
     } else if (isPlayerTurn) {
-        let cardsAvailable = Array.from(document.querySelectorAll('.player-cards .card')).some(card => !card.getAttribute("data-placed")) ? 1 : 0;
-        updateStatusBar(cardsAvailable, playerCardsOnGrid);
+        setTimeout(() => {
+
+            // Check how many player cards are on the grid
+            playerCardsOnGrid = Array.from(document.querySelectorAll('.grid-cell[data-occupied="player"]')).length;
+
+            let cardsAvailable = Array.from(document.querySelectorAll('.player-cards .card')).some(card => !card.getAttribute("data-placed")) ? 1 : 0;
+            updateStatusBar(cardsAvailable, playerCardsOnGrid);
+        }, 500);
     }
 }
 
@@ -391,6 +397,7 @@ const container = document.querySelector('main'); // Use the common container fo
 
 const opponentCards = Array.from(document.querySelectorAll('.opponent-cards .card'));
 let currentOpponentCardIndex = 0; // Track which opponent card to place
+let lastPokemonAttacked = null; // Track the last pokemon attacked
 
 let originalRotation = '';
 
@@ -489,7 +496,7 @@ cards.forEach(card => {
                             cardRect.right > cellRect.left &&
                             cardRect.top < cellRect.bottom &&
                             cardRect.bottom > cellRect.top &&
-                            isPlayerTurn
+                            isPlayerTurn && !validAttack
                         ) {
 
                             const isBottomRow = index >= 3; // Bottom row indices are 3, 4, 5
@@ -547,10 +554,19 @@ cards.forEach(card => {
                                         playInvalidActionAnimation(card, `${originalLeft}px`, `${originalTop}px`); // Pass original position
                                     }
                                     if (opponentCard && !cardsPlacedThisTurn.has(card) && card.getAttribute('data-placed') === 'true') {
+
+                                        // If the last pokemon attacked is the same as the current one, it can't attack again
+                                        if (lastPokemonAttacked === card.getAttribute('data-name')) {
+                                            invalidAttack = true;
+                                            playInvalidActionAnimation(card, `${originalLeft}px`, `${originalTop}px`); // Pass original position
+                                            return;
+                                        }
+
                                         validAttack = true;
 
                                         const indexPlayerCard = myPokemons.findIndex(p => p.name === card.getAttribute('data-name'));
                                         const indexOpponentCard = opponentPokemons.findIndex(p => p.name === opponentCard.getAttribute('data-name'));
+                                        lastPokemonAttacked = card.getAttribute('data-name');
 
                                         // Play attack animation and reset the player card after it completes
                                         playAttackOpponentAnimation(card, opponentCard, () => {
@@ -737,7 +753,6 @@ cards.forEach(card => {
         card.addEventListener('touchstart', startDrag);
         card.addEventListener('contextmenu', (e) => {
             e.preventDefault();
-            displayGameOverMessage('player');
         });
 
 });

@@ -606,7 +606,7 @@ function expandCard(card) {
     // Apply transformations
     card.style.position = 'fixed';
     card.style.zIndex = '1000';
-    card.style.left = `${cardRect.left + 13}px`; //13 is manual fix for the position
+    card.style.left = `${cardRect.left}px`;
     card.style.top = `${cardRect.top + 17}px`; //17 is manual fix for the position
     card.style.transform = `translate(${xOffset}px, ${yOffset}px) scale(1.3)`;
     card.style.transition = 'all 0.5s ease-in-out, z-index 0s';
