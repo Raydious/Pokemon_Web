@@ -25,6 +25,21 @@
     }
 }
 
+@media (max-height: 570px) {
+    main {
+        position: relative;
+        top: -90px;
+    }
+
+    .status-bar {
+        position: absolute;
+    }
+
+    .player-cards {
+        padding-top: 20px;
+    }
+}
+
 html {
     overflow: hidden;
 }
@@ -213,7 +228,7 @@ main {
         }
 
         .poke-name {
-            font-size: 14px;
+            font-size: 10px;
             text-align: center;
             font-weight: 600;
         }
