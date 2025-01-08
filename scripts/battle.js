@@ -212,6 +212,8 @@ function displayGameOverMessage(winner) {
 function showPokemonPopup() {
     const pokemonPopup = document.getElementById('pokemonPopup');
     pokemonPopup.classList.remove('hidden');
+    canShowTutorial = false;
+
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -1153,6 +1155,148 @@ function placeOpponentCard() {
     }
 }
 
+const tutorialSteps = [
+    "Welcome, Trainer! Ready to master the game? Let's dive in with these quick steps.",
+    "Strategize your moves by placing one card per round on the bottom row of the grid. Use open spaces wisely to set up your winning strategy!",
+    "Attack by dragging your cards onto opponent cards on the top row. Cards placed this round can’t attack, but cards from previous rounds can!",
+    "Click on a card to flip it and reveal its stats — knowledge is power! Remember, defense is reduced before HP during battles!",
+    "Achieve victory by defeating all your opponent's cards. Show them your skills!"
+];
+
+const tutorialHeadings = [
+    "Welcome to the Adventure!",
+    "🃏 Strategize Your Moves",
+    "⚔️ Attack Your Opponent",
+    "🔍 Unlock Strategic Insights",
+    "🏆 Claim Your Victory"
+];
+
+const tutorialImages = [
+    { icon: "../img/pokeball.png" },
+    { single: "../img/game-example.png" }, 
+    { single: "../img/game-example2.png" },
+    { 
+        left: "../img/game-example3.png", 
+        right: "../img/game-example4.png" 
+    },
+    { icon: "../img/battle.png" }
+];
+
+let currentStep = 0;
+let firstLoad = true;
+let canShowTutorial = true;
+
+function showTutorial() {
+    if (!canShowTutorial) return;
+    const tutorialOverlay = document.getElementById("tutorialOverlay");
+    const tutorialContent = document.querySelector(".tutorial-content");
+    const tutorialHeading = document.getElementById("tutorialHeading");
+    const tutorialStep = document.getElementById("tutorialStep");
+    const tutorialImageContainer = document.getElementById("tutorialImageContainer");
+    const nextStepBtn = document.getElementById("nextStepBtn");
+
+    tutorialOverlay.classList.remove("hidden");
+    tutorialHeading.textContent = tutorialHeadings[currentStep];
+    tutorialStep.textContent = tutorialSteps[currentStep];
+
+    // Show the image if it exists for the current step
+    if (tutorialImages[currentStep]) {
+        tutorialImageContainer.innerHTML = `
+        <div class="tutorial-animation">
+            <img src="../img/pokeball.png" alt="Welcome Animation" class="tutorial-animation-icon">
+        </div>
+        `;
+    } else {
+        tutorialImageContainer.innerHTML = ""; // Clear the image if none exists
+    }
+
+    // Apply the bounce animation only on the first load
+    if (firstLoad) {
+        tutorialContent.style.animation = "popupBounceTutorial 0.9s ease-in-out";
+        firstLoad = false;
+
+        // Remove animation property after completion
+        setTimeout(() => {
+            tutorialContent.style.animation = ""; // Clear the animation
+        }, 900); // Match the duration of the bounce animation
+    }
+
+    nextStepBtn.addEventListener("click", () => {
+        if (currentStep < tutorialSteps.length - 1) {
+            nextStep(tutorialHeading, tutorialStep, tutorialImageContainer, tutorialContent);
+        } else {
+            closeTutorial();
+        }
+    });
+
+    document.getElementById("skipTutorialBtn").addEventListener("click", closeTutorial);
+}
+
+function nextStep(tutorialHeading, tutorialStep, tutorialImageContainer, tutorialContent) {
+    // Add slide-out animation
+    tutorialContent.style.animation = "slideOutLeft 0.5s ease";
+
+    // Wait for animation to complete before showing the next step
+    setTimeout(() => {
+        tutorialContent.style.animation = "slideInRight 0.5s ease";
+        currentStep++;
+        tutorialHeading.textContent = tutorialHeadings[currentStep];
+        tutorialStep.textContent = tutorialSteps[currentStep];
+
+        // Update the images based on the step
+        const images = tutorialImages[currentStep];
+        if (images) {
+            if (images.single) {
+                // Single image case
+                tutorialImageContainer.innerHTML = `<img src="${images.single}" alt="Tutorial Step Image" class="tutorial-image">`;
+            } else if (images.left && images.right) {
+                // Two images case
+                tutorialImageContainer.innerHTML = `
+                    <div class="tutorial-images">
+                        <div class="tutorial-images">
+                            <img src="${images.left}" alt="Left Tutorial Image" class="tutorial-image">
+                            <img src="${images.right}" alt="Right Tutorial Image" class="tutorial-image">
+                        </div>
+                    </div>
+                `;
+            }
+            else if (images.icon) {
+                // Icon case
+                tutorialImageContainer.innerHTML = `
+                    <div class="tutorial-animation">
+                        <img src="${images.icon}" alt="Welcome Animation" class="tutorial-animation-icon">
+                    </div>
+                `;
+            }
+        } else {
+            tutorialImageContainer.innerHTML = ""; // Clear the container if no images
+        }
+
+        // Clean up animation after it finishes
+        setTimeout(() => {
+            tutorialContent.style.animation = "";
+        }, 500); // Match the duration of the slide-in animation
+    }, 500); // Match the duration of the slide-out animation
+}
+
+function closeTutorial() {
+    const tutorialOverlay = document.getElementById("tutorialOverlay");
+
+    // Add fade-out animation
+    tutorialOverlay.style.animation = "fadeOutOverlayTutorial 0.8s ease";
+
+    // Wait for animation to complete before hiding
+    setTimeout(() => {
+        tutorialOverlay.classList.add("hidden");
+        tutorialOverlay.style.animation = ""; // Reset animation style
+        currentStep = 0; // Reset tutorial
+    }, 800); // Match fade-out duration
+}
+
+// Show the tutorial when the page loads with a delay
+document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(showTutorial, 2000); 
+});
 
 
 

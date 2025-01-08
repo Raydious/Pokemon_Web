@@ -69,6 +69,11 @@
                     <span class="status-left">Cards available to play: <span id="cardsAvailable">1</span></span>
                     <span class="status-right">Attacks remaining: <span id="attacksRemaining">0</span></span>
                 </div>
+
+                <!-- Help Button -->
+                <button id="helpButton" class="floating-help-btn" onclick="showTutorial()">
+                    ❓
+                </button>
             </section>
         
             <!-- Player's cards -->
@@ -91,6 +96,17 @@
                     Don't leave your team hanging — <span class="highlight">go catch 'em all!</span>
                 </p>
                 <a href="pokedex.html" style="text-decoration: none;"><button id="catchPokemonsBtn" class="restart-button">Catch Pokémon Now! 🎯</button></a>
+            </div>
+        </div>
+
+        <div id="tutorialOverlay" class="tutorial-overlay hidden">
+            <div class="tutorial-content">
+                <h1 id="tutorialHeading">🌟 Welcome Trainer! 🌟</h1>
+                <p id="tutorialStep">Welcome to the game! Here's a quick guide to get you started.</p>
+                <div id="tutorialImageContainer">
+                </div> <!-- Image(s) will be injected here -->
+                <button id="nextStepBtn" class="tutorial-button tutorial-button">Next</button>
+                <button id="skipTutorialBtn" class="tutorial-button tutorial-skip-button">Skip Tutorial</button>
             </div>
         </div>
 

@@ -199,18 +199,15 @@ function showNextPokemon(first) {
     // If is the first time
     if (first) {
 
-        // Set the timeout for the first animation
-        setTimeout(() => {
+        // Remove the class
+        cardElement.classList.remove('BeforeFirstActive');
 
-            // Remove the class
-            cardElement.classList.remove('BeforeFirstActive');
+        // Add the class
+        cardElement.classList.add('firstActive');
 
-            // Add the class
-            cardElement.classList.add('firstActive');
-
-            // Populate the card with the next Pokémon data
-            populateCard(nextPokemon);
-        }, 500);
+        // Populate the card with the next Pokémon data
+        populateCard(nextPokemon);
+        
         return;
     }
 
