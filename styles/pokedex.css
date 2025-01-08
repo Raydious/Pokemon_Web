@@ -38,6 +38,7 @@
         background: linear-gradient(to right, #444, #222);
         border-left: 5px solid #f7d02c;
         padding-top: 60px;
+        overflow-y: auto;
 
         .user-info {
             display: flex;
