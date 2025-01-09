@@ -28,7 +28,7 @@
 @media (max-height: 760px) {
     main {
         position: relative;
-        top: -90px;
+        top: -0px;
     }
 
     .status-bar {
@@ -37,6 +37,13 @@
 
     .player-cards {
         padding-top: 20px;
+    }
+}
+
+@media (max-height: 680px) {
+    main {
+        position: relative;
+        top: -90px !important;
     }
 }
 
