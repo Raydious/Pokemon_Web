@@ -196,6 +196,7 @@ function displayPokemon(pokemon) {
 
     // Create a button based on the Pokémon's status
     const button = document.createElement('button');
+    button.classList.add('restart-button-game');
     if (isCaught) {
         // If the Pokémon is already caught
         button.textContent = "Add to Team";
@@ -566,6 +567,11 @@ function openCloseAside() {
 
     // Toggle the aside's margin right
     document.getElementById("battle-panel").style.marginRight = isRightNavOpen ? "-250px" : "0px";
+    const battlePanelIcon = document.querySelectorAll('.openCloseAside');
+    battlePanelIcon.forEach(icon => {
+        icon.style.marginRight = isRightNavOpen ? "0px" : "250px";
+    }
+    );
 
     // Update the state of isRightNavOpen
     isRightNavOpen = !isRightNavOpen;
