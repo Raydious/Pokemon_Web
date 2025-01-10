@@ -1186,8 +1186,10 @@ let currentStep = 0;
 let firstLoad = true;
 let canShowTutorial = true;
 
-function showTutorial() {
-    if (!canShowTutorial) return;
+function showTutorial(force = false) {
+    const hasSeenTutorial = localStorage.getItem('hasSeenTutorial');
+    
+    if (!force && (hasSeenTutorial || !canShowTutorial)) return;
     const tutorialOverlay = document.getElementById("tutorialOverlay");
     const tutorialContent = document.querySelector(".tutorial-content");
     const tutorialHeading = document.getElementById("tutorialHeading");
@@ -1230,6 +1232,7 @@ function showTutorial() {
     });
 
     document.getElementById("skipTutorialBtn").addEventListener("click", closeTutorial);
+    localStorage.setItem('hasSeenTutorial', 'true');
 }
 
 function nextStep(tutorialHeading, tutorialStep, tutorialImageContainer, tutorialContent) {

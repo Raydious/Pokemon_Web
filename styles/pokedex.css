@@ -377,7 +377,6 @@ main {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 20px;
 
             .preview-avatar {
                 width: 100px;
@@ -407,7 +406,6 @@ main {
         input[type="text"], input[type="email"] {
             width: 100%;
             padding: 10px;
-            margin-bottom: 20px;
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 14px;
@@ -420,6 +418,7 @@ main {
         }
 
         #error {
+            margin-top: 10px;
             color: red;
         }
         
@@ -436,7 +435,7 @@ main {
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             overflow: hidden;
             position: relative;
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
         .save-button:hover {
